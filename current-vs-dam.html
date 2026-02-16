@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cummings Electrical - Current Solution vs. DAM</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f0f2f5;
+      color: #2d3748;
+      padding: 40px 20px;
+    }
+
+    .container { max-width: 1320px; margin: 0 auto; }
+
+    /* ── NAV ── */
+    .nav {
+      display: flex; align-items: center; gap: 24px;
+      margin-bottom: 16px; padding: 12px 20px;
+      background: #1a202c; border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    }
+    .nav a {
+      color: #a0aec0; text-decoration: none; font-size: 13px;
+      font-weight: 600; padding: 6px 14px; border-radius: 8px;
+      transition: all 0.15s;
+    }
+    .nav a:hover { color: #fff; background: rgba(255,255,255,0.08); }
+    .nav a.active { color: #fff; background: #4f46e5; }
+
+    /* ── TOOLBAR ── */
+    .toolbar {
+      display: flex; align-items: center; justify-content: flex-end;
+      gap: 10px; margin-bottom: 20px; padding: 14px 20px;
+      background: #fff; border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border: none; border-radius: 8px;
+      font-family: inherit; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .btn-success { background: #059669; color: #fff; }
+
+    /* ── HEADER ── */
+    .header { text-align: center; margin-bottom: 40px; }
+    .header h1 {
+      font-size: 32px; font-weight: 800; color: #1a202c;
+      margin-bottom: 6px; letter-spacing: -0.5px;
+    }
+    .header p {
+      font-size: 15px; color: #718096; font-weight: 500;
+      max-width: 740px; margin: 0 auto; line-height: 1.6;
+    }
+
+    /* ── CURRENT STACK OVERVIEW ── */
+    .stack-overview {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 900px) { .stack-overview { grid-template-columns: 1fr; } }
+
+    .stack-card {
+      background: #fff; border-radius: 14px; padding: 24px;
+      box-shadow: 0 3px 16px rgba(0,0,0,0.06);
+      border-top: 4px solid;
+    }
+    .stack-card.sharepoint { border-color: #0078d4; }
+    .stack-card.server     { border-color: #6b7280; }
+    .stack-card.bridge     { border-color: #ff6600; }
+
+    .stack-card h3 {
+      font-size: 16px; font-weight: 800; color: #1a202c;
+      margin-bottom: 4px;
+    }
+    .stack-card .role {
+      font-size: 12px; font-weight: 600; color: #718096;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+    .stack-card p {
+      font-size: 13px; color: #4a5568; line-height: 1.6;
+    }
+    .stack-card .tag-row {
+      display: flex; flex-wrap: wrap; gap: 5px; margin-top: 12px;
+    }
+    .stack-card .tag {
+      padding: 3px 10px; border-radius: 6px; font-size: 10px;
+      font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px;
+    }
+    .tag.pro  { background: #d1fae5; color: #065f46; }
+    .tag.con  { background: #fee2e2; color: #991b1b; }
+    .tag.note { background: #e0e7ff; color: #3730a3; }
+
+    /* ── SECTION HEADERS ── */
+    .section-title {
+      font-size: 22px; font-weight: 800; color: #1a202c;
+      margin-bottom: 6px; letter-spacing: -0.3px;
+    }
+    .section-subtitle {
+      font-size: 14px; color: #718096; margin-bottom: 24px; line-height: 1.5;
+    }
+
+    /* ── COMPARISON TABLE ── */
+    .comp-table-wrap {
+      background: #fff; border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+      padding: 28px 32px; margin-bottom: 40px;
+      overflow-x: auto;
+    }
+    .comp-table-wrap h2 {
+      font-size: 18px; font-weight: 800; color: #1a202c;
+      margin-bottom: 16px; letter-spacing: -0.3px;
+    }
+    .comp-table {
+      width: 100%; border-collapse: collapse; min-width: 800px;
+    }
+    .comp-table th, .comp-table td {
+      padding: 11px 14px; font-size: 12.5px; text-align: center;
+      border-bottom: 1px solid #edf2f7; vertical-align: top;
+    }
+    .comp-table th {
+      font-weight: 700; color: #fff;
+    }
+    .comp-table th:first-child {
+      background: #fff; color: #718096; font-size: 10px;
+      text-transform: uppercase; letter-spacing: 1px; text-align: left;
+    }
+    .comp-table th.current { background: #6b7280; }
+    .comp-table th.dam { background: #4f46e5; }
+    .comp-table th:nth-child(2) { border-radius: 8px 0 0 0; }
+    .comp-table th:nth-child(4) { border-radius: 0 0 0 0; }
+    .comp-table th:last-child { border-radius: 0 8px 0 0; }
+    .comp-table td:first-child {
+      text-align: left; font-weight: 600; color: #2d3748;
+    }
+    .comp-table tr:last-child td { border-bottom: none; }
+
+    .cell-good { color: #059669; font-weight: 700; }
+    .cell-ok   { color: #d97706; font-weight: 600; }
+    .cell-bad  { color: #dc2626; font-weight: 600; }
+    .cell-na   { color: #a0aec0; }
+
+    /* ── NARRATIVE CARDS ── */
+    .narrative {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 900px) { .narrative { grid-template-columns: 1fr; } }
+
+    .narr-card {
+      background: #fff; border-radius: 14px; padding: 24px 28px;
+      box-shadow: 0 3px 16px rgba(0,0,0,0.06);
+      border-left: 5px solid;
+    }
+    .narr-card.risk   { border-color: #dc2626; }
+    .narr-card.gain   { border-color: #059669; }
+    .narr-card.bridge { border-color: #f59e0b; }
+    .narr-card.hybrid { border-color: #6366f1; }
+
+    .narr-card h3 {
+      font-size: 15px; font-weight: 800; color: #1a202c;
+      margin-bottom: 8px;
+    }
+    .narr-card p {
+      font-size: 13px; color: #4a5568; line-height: 1.65;
+    }
+    .narr-card ul {
+      margin: 8px 0 0 18px; font-size: 13px; color: #4a5568;
+      line-height: 1.65;
+    }
+    .narr-card li { margin-bottom: 4px; }
+
+    /* ── INDIVIDUAL DAM COMPARISON CARDS ── */
+    .dam-vs {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 900px) { .dam-vs { grid-template-columns: 1fr; } }
+
+    .dam-card {
+      background: #fff; border-radius: 14px; overflow: hidden;
+      box-shadow: 0 3px 16px rgba(0,0,0,0.06);
+    }
+    .dam-card-header {
+      padding: 18px 24px; color: #fff;
+    }
+    .dam-card-header h3 { font-size: 16px; font-weight: 800; }
+    .dam-card-header .sub { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+
+    .dam-card.canto .dam-card-header       { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+    .dam-card.bynder .dam-card-header      { background: linear-gradient(135deg, #3498db, #2471a3); }
+    .dam-card.brandfolder .dam-card-header { background: linear-gradient(135deg, #2ecc71, #1e8449); }
+    .dam-card.openasset .dam-card-header   { background: linear-gradient(135deg, #f39c12, #d68910); }
+
+    .dam-card-body { padding: 20px 24px; }
+    .dam-card-body h4 {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; color: #a0aec0; margin-bottom: 6px;
+    }
+    .dam-card-body p {
+      font-size: 13px; color: #4a5568; line-height: 1.6;
+      margin-bottom: 14px;
+    }
+    .dam-card-body ul {
+      margin: 0 0 14px 18px; font-size: 12.5px; color: #4a5568;
+      line-height: 1.6;
+    }
+    .dam-card-body li { margin-bottom: 3px; }
+
+    .verdict {
+      background: #f7fafc; border-radius: 10px; padding: 14px 18px;
+      border-left: 4px solid #4f46e5;
+    }
+    .verdict p {
+      font-size: 13px; color: #2d3748; font-weight: 500;
+      line-height: 1.55; margin: 0;
+    }
+
+    /* ── BOTTOM LINE ── */
+    .bottom-line {
+      background: #1a202c; border-radius: 16px; padding: 32px 36px;
+      margin-bottom: 24px; color: #fff;
+    }
+    .bottom-line h2 {
+      font-size: 20px; font-weight: 800; margin-bottom: 14px;
+    }
+    .bottom-line p {
+      font-size: 14px; color: #cbd5e0; line-height: 1.65;
+      margin-bottom: 12px;
+    }
+    .bottom-line strong { color: #fff; }
+
+    .footnote {
+      text-align: center; font-size: 12px; color: #a0aec0;
+      padding: 16px 0 0;
+    }
+
+    /* ── PRINT ── */
+    @media print {
+      body { background: #fff; padding: 10px; }
+      .toolbar, .nav { display: none !important; }
+      .stack-overview { grid-template-columns: 1fr 1fr 1fr; }
+      .narrative, .dam-vs { grid-template-columns: 1fr 1fr; }
+      .comp-table-wrap, .narr-card, .dam-card, .stack-card, .bottom-line {
+        box-shadow: none; border: 1px solid #e2e8f0; break-inside: avoid;
+      }
+      .bottom-line { background: #2d3748; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <nav class="nav no-print">
+    <a href="index.html">Home</a>
+    <a href="summary.html">Summary</a>
+    <a href="capabilities.html">Capabilities</a>
+    <a href="current-vs-dam.html" class="active">Current vs. DAM</a>
+    <a href="pricing.html">Pricing</a>
+  </nav>
+
+  <div class="toolbar no-print">
+    <button class="btn btn-success" onclick="window.print()">Export PDF</button>
+  </div>
+
+  <div class="header">
+    <h1>Current Solution vs. DAM</h1>
+    <p>How our existing setup (SharePoint, a shared network server, and potentially Adobe Bridge) compares to a purpose-built Digital Asset Management platform, and what we gain (or don't) by making the switch.</p>
+  </div>
+
+  <!-- ═══════════════ OUR CURRENT STACK ═══════════════ -->
+  <h2 class="section-title">What We Use Today</h2>
+  <p class="section-subtitle">Three tools, each serving a different role, but none designed specifically for managing and distributing creative assets at scale.</p>
+
+  <div class="stack-overview">
+
+    <div class="stack-card sharepoint">
+      <h3>Microsoft SharePoint</h3>
+      <div class="role">Company-wide collaboration &amp; file sharing</div>
+      <p>Our primary platform for coordinating across departments. SharePoint handles internal documents, announcements, and cross-team file sharing. It integrates tightly with the Microsoft 365 ecosystem (Teams, Outlook, OneDrive) and supports basic document libraries with versioning.</p>
+      <div class="tag-row">
+        <span class="tag pro">Already licensed</span>
+        <span class="tag pro">Company-wide adoption</span>
+        <span class="tag pro">M365 integration</span>
+        <span class="tag con">Not built for visual assets</span>
+        <span class="tag con">Poor media preview</span>
+      </div>
+    </div>
+
+    <div class="stack-card server">
+      <h3>Office Shared Network Server</h3>
+      <div class="role">Project files, videos &amp; photos for marketing</div>
+      <p>Our network drive is where the marketing and communications teams store and share project photography, video assets, templates, and working files. Organized through folder hierarchies. No metadata and no search beyond file names. Remote access is available on company-issued Windows computers, but not on Macs (which the marketing team uses) or mobile devices. Access must be granted internally by IT.</p>
+      <div class="tag-row">
+        <span class="tag pro">No recurring cost</span>
+        <span class="tag pro">Unlimited storage</span>
+        <span class="tag con">Folder-only organization</span>
+        <span class="tag con">No search / no metadata</span>
+        <span class="tag con">No Mac or mobile access remotely</span>
+        <span class="tag con">IT-gated access</span>
+      </div>
+    </div>
+
+    <div class="stack-card bridge">
+      <h3>Adobe Bridge</h3>
+      <div class="role">Potential metadata layer (not yet implemented)</div>
+      <p>Adobe Bridge can read, edit, and write XMP metadata (keywords, ratings, labels) onto files stored on our server. Some team members have considered it as a lightweight DAM alternative. It's free with any Creative Cloud license and integrates with Photoshop and InDesign.</p>
+      <div class="tag-row">
+        <span class="tag pro">Free with CC license</span>
+        <span class="tag pro">Strong metadata editing</span>
+        <span class="tag note">Not yet implemented</span>
+        <span class="tag con">Single-user only</span>
+        <span class="tag con">No web / no cloud</span>
+        <span class="tag con">Desktop app required</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════ FEATURE COMPARISON TABLE ═══════════════ -->
+  <div class="comp-table-wrap">
+    <h2>Feature-by-Feature Comparison</h2>
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th style="width:22%;"></th>
+          <th class="current">SharePoint</th>
+          <th class="current">Network Server</th>
+          <th class="current">Adobe Bridge</th>
+          <th class="dam">DAM Platform</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Primary Purpose</td>
+          <td>Document collaboration</td>
+          <td>File storage</td>
+          <td>Local file browser</td>
+          <td class="cell-good">Digital asset management</td>
+        </tr>
+        <tr>
+          <td>Visual Asset Browsing</td>
+          <td class="cell-ok">Small thumbnails only</td>
+          <td class="cell-bad">OS file icons / no preview</td>
+          <td class="cell-good">Rich previews + ratings</td>
+          <td class="cell-good">Full visual gallery with filters</td>
+        </tr>
+        <tr>
+          <td>Search Capability</td>
+          <td class="cell-ok">Filename + basic text</td>
+          <td class="cell-bad">Filename only</td>
+          <td class="cell-ok">Metadata + keywords (local)</td>
+          <td class="cell-good">AI-powered, metadata, tags, NLP</td>
+        </tr>
+        <tr>
+          <td>Metadata Management</td>
+          <td class="cell-bad">Minimal (SharePoint columns)</td>
+          <td class="cell-bad">None</td>
+          <td class="cell-good">XMP standard, custom fields</td>
+          <td class="cell-good">Custom schemas, auto-tagging, AI</td>
+        </tr>
+        <tr>
+          <td>AI Auto-Tagging</td>
+          <td class="cell-bad">Not available</td>
+          <td class="cell-bad">Not available</td>
+          <td class="cell-bad">Not available</td>
+          <td class="cell-good">Image recognition, facial, OCR</td>
+        </tr>
+        <tr>
+          <td>Multi-User Collaboration</td>
+          <td class="cell-good">Built-in (M365)</td>
+          <td class="cell-ok">Shared access, no sync</td>
+          <td class="cell-bad">Single user only</td>
+          <td class="cell-good">Role-based teams, comments, approvals</td>
+        </tr>
+        <tr>
+          <td>Remote / Cloud Access</td>
+          <td class="cell-good">Full web + mobile</td>
+          <td class="cell-ok">Windows PCs only (no Mac/mobile)</td>
+          <td class="cell-bad">Local desktop only</td>
+          <td class="cell-good">Full web + mobile + API</td>
+        </tr>
+        <tr>
+          <td>Version Control</td>
+          <td class="cell-ok">Document versioning</td>
+          <td class="cell-bad">Manual (filename suffixes)</td>
+          <td class="cell-bad">Not available</td>
+          <td class="cell-good">Automatic with rollback</td>
+        </tr>
+        <tr>
+          <td>Brand Portals / External Sharing</td>
+          <td class="cell-bad">Difficult to configure</td>
+          <td class="cell-bad">Not possible</td>
+          <td class="cell-bad">Not possible</td>
+          <td class="cell-good">Branded portals, share links, CDN</td>
+        </tr>
+        <tr>
+          <td>Approval Workflows</td>
+          <td class="cell-ok">Power Automate (complex setup)</td>
+          <td class="cell-bad">Not available</td>
+          <td class="cell-bad">Not available</td>
+          <td class="cell-good">Built-in proofing + approvals</td>
+        </tr>
+        <tr>
+          <td>Creative Tool Integration</td>
+          <td class="cell-bad">None for creative apps</td>
+          <td class="cell-ok">Files accessible from apps</td>
+          <td class="cell-good">Adobe CC native</td>
+          <td class="cell-good">Adobe, Figma, Canva, MS Office</td>
+        </tr>
+        <tr>
+          <td>Templating / Brand Studio</td>
+          <td class="cell-bad">Not available</td>
+          <td class="cell-bad">Not available</td>
+          <td class="cell-bad">Not available</td>
+          <td class="cell-good">On-brand template creation</td>
+        </tr>
+        <tr>
+          <td>Usage Analytics</td>
+          <td class="cell-ok">Basic file access logs</td>
+          <td class="cell-bad">Not available</td>
+          <td class="cell-bad">Not available</td>
+          <td class="cell-good">Downloads, views, engagement data</td>
+        </tr>
+        <tr>
+          <td>File Format Conversion</td>
+          <td class="cell-bad">Not available</td>
+          <td class="cell-bad">Not available</td>
+          <td class="cell-ok">Limited (JPEG, PSD, TIFF)</td>
+          <td class="cell-good">On-the-fly conversion + presets</td>
+        </tr>
+        <tr>
+          <td>Duplicate Detection</td>
+          <td class="cell-bad">Not available</td>
+          <td class="cell-bad">Not available</td>
+          <td class="cell-bad">Not available</td>
+          <td class="cell-good">AI-powered deduplication</td>
+        </tr>
+        <tr>
+          <td>Digital Rights Management</td>
+          <td class="cell-bad">Not available</td>
+          <td class="cell-bad">Not available</td>
+          <td class="cell-ok">IPTC/XMP rights fields</td>
+          <td class="cell-good">Expiration dates, usage rights, access controls</td>
+        </tr>
+        <tr>
+          <td>Scalability</td>
+          <td class="cell-good">Enterprise-grade</td>
+          <td class="cell-ok">Hardware-dependent</td>
+          <td class="cell-bad">Single machine</td>
+          <td class="cell-good">Cloud-native, unlimited</td>
+        </tr>
+        <tr>
+          <td>Cost</td>
+          <td class="cell-good">Included in M365</td>
+          <td class="cell-good">Existing infrastructure</td>
+          <td class="cell-good">Free with CC</td>
+          <td class="cell-ok">$22K–$63K/yr (see Pricing page)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ═══════════════ RISK & OPPORTUNITY NARRATIVES ═══════════════ -->
+  <h2 class="section-title">What's at Stake</h2>
+  <p class="section-subtitle">The real costs of our current approach aren't line items. They're hidden in lost time, duplicated work, and missed opportunities.</p>
+
+  <div class="narrative">
+
+    <div class="narr-card risk">
+      <h3>Risks of Staying With the Current Setup</h3>
+      <ul>
+        <li><strong>Time lost searching:</strong> Without metadata or AI tagging, finding the right photo or video means manually browsing folders. Industry studies estimate employees spend 5–10 hours per week searching for assets.</li>
+        <li><strong>Duplicate and outdated assets:</strong> No deduplication or version control means multiple copies of the same file across folders, with no way to know which is current.</li>
+        <li><strong>Limited remote access:</strong> The server is accessible remotely on company-issued Windows computers, but not on the marketing team's Macs or any mobile devices. External partners have no access at all. Access requires IT approval, adding lead time for new team members.</li>
+        <li><strong>Brand inconsistency:</strong> Without portals or style guides, there's no single source of truth for approved assets. Teams may use outdated logos, off-brand photography, or incorrect templates.</li>
+        <li><strong>No analytics:</strong> We have no visibility into which assets are being used, which are ignored, and where content gaps exist.</li>
+        <li><strong>Security gaps:</strong> A shared server offers limited permission granularity. Files can be accidentally deleted, moved, or overwritten with no rollback.</li>
+      </ul>
+    </div>
+
+    <div class="narr-card gain">
+      <h3>What a DAM Platform Solves</h3>
+      <ul>
+        <li><strong>Find anything in seconds:</strong> AI tagging, custom metadata, and natural language search eliminate the "where's that file?" problem entirely.</li>
+        <li><strong>Single source of truth:</strong> One central, versioned library replaces scattered folders. Everyone accesses the same approved, current assets.</li>
+        <li><strong>Access from any device:</strong> Web-based and mobile-ready, working on Macs, PCs, tablets, and phones. No IT setup required for new users. Share branded portals with external partners in minutes.</li>
+        <li><strong>Protect the brand:</strong> Approval workflows, usage rights, and expiration dates ensure only approved, on-brand content gets published.</li>
+        <li><strong>Measure what matters:</strong> Analytics show which assets drive engagement, which are underused, and where to invest creative resources.</li>
+        <li><strong>Scale without friction:</strong> Cloud-native storage means no hardware upgrades, no capacity planning, and automatic backups.</li>
+      </ul>
+    </div>
+
+    <div class="narr-card bridge">
+      <h3>The Adobe Bridge Consideration</h3>
+      <p>Bridge is a capable metadata editor, but it is not a DAM. Here's what it can and can't do:</p>
+      <ul>
+        <li><strong>Can:</strong> Add keywords, ratings, labels, and custom XMP fields to files on the server. Batch-edit metadata. Preview images beautifully. Filter by metadata locally.</li>
+        <li><strong>Cannot:</strong> Share metadata across users (each person's Bridge is independent). Provide web or mobile access. Support approval workflows, portals, or analytics. Auto-tag with AI. Handle video well.</li>
+        <li><strong>Fundamental limit:</strong> Bridge is a single-user desktop application. Two people can't see the same keywords, ratings, or collections. Metadata written to files via XMP is visible to other Bridge users only if they browse to the same file. There's no shared search index.</li>
+        <li><strong>Best role:</strong> Bridge works well as a power-user tool alongside a DAM, not as a replacement for one. A DAM centralizes and shares; Bridge helps individuals work faster locally.</li>
+      </ul>
+    </div>
+
+    <div class="narr-card hybrid">
+      <h3>Could We Use a Hybrid Approach?</h3>
+      <p>Yes, and many organizations do. The most common hybrid model:</p>
+      <ul>
+        <li><strong>SharePoint stays</strong> for internal documents, team sites, and company-wide collaboration (HR, finance, project docs). It does this well.</li>
+        <li><strong>DAM replaces the network server</strong> for all marketing/creative assets (photography, video, logos, templates, brand guidelines). This is where the server falls short.</li>
+        <li><strong>Bridge remains optional</strong> as a local creative workflow tool for designers who want quick metadata editing or batch processing before uploading to the DAM.</li>
+      </ul>
+      <p style="margin-top:8px;">This approach doesn't require ripping out existing infrastructure. SharePoint and the server continue serving their strengths while the DAM fills the gap that neither was designed to address.</p>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════ EACH DAM vs. CURRENT ═══════════════ -->
+  <h2 class="section-title">Each DAM vs. Our Current Setup</h2>
+  <p class="section-subtitle">How each specific DAM solution would slot in alongside, or replace, what we use today.</p>
+
+  <div class="dam-vs">
+
+    <div class="dam-card canto">
+      <div class="dam-card-header">
+        <h3>Canto vs. Current Setup</h3>
+        <div class="sub">Replaces: Network server &bull; Complements: SharePoint</div>
+      </div>
+      <div class="dam-card-body">
+        <h4>What Changes</h4>
+        <p>Canto would replace the network server as the home for all marketing photos, videos, and brand assets. Its unlimited portals mean each department or external partner gets a curated, branded view of approved assets. The Adobe CC and MS Office integrations let designers pull assets directly into InDesign, Photoshop, and PowerPoint without leaving those apps.</p>
+        <h4>What It Solves That We Can't Do Today</h4>
+        <ul>
+          <li>AI auto-tagging eliminates manual metadata work that Bridge would require</li>
+          <li>Unlimited branded portals replace ad-hoc SharePoint sharing links</li>
+          <li>Brand Studio templates let non-designers create on-brand collateral</li>
+          <li>Mobile + desktop apps give field teams instant asset access</li>
+        </ul>
+        <h4>What Stays the Same</h4>
+        <p>SharePoint remains for internal docs and cross-department collaboration. The network server could be retained as a backup archive or phased out.</p>
+        <div class="verdict">
+          <p><strong>Best fit if:</strong> Your team relies heavily on Adobe CC + Microsoft Office daily and wants the most feature-complete single platform with AI tagging, templating, and unlimited portals included, without add-on modules.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="dam-card bynder">
+      <div class="dam-card-header">
+        <h3>Bynder vs. Current Setup</h3>
+        <div class="sub">Replaces: Network server &bull; Complements: SharePoint</div>
+      </div>
+      <div class="dam-card-body">
+        <h4>What Changes</h4>
+        <p>Bynder would serve as the enterprise-grade hub for all creative assets. Its 155+ integrations mean it can connect to virtually any tool in our tech stack, including SharePoint itself, HubSpot, Salesforce, and Adobe CC. The CloudFront CDN delivers assets at speed to any digital channel. AI Agents can automatically enforce brand rules.</p>
+        <h4>What It Solves That We Can't Do Today</h4>
+        <ul>
+          <li>Taxonomy-driven smart filters replace folder guessing on the server</li>
+          <li>AI Agents enforce brand compliance automatically, no manual policing</li>
+          <li>Format presets let anyone download channel-ready assets (social, print, web)</li>
+          <li>24/7 multi-language support for global or distributed teams</li>
+        </ul>
+        <h4>What Stays the Same</h4>
+        <p>SharePoint continues for document collaboration. Bynder can integrate with SharePoint so approved assets sync between platforms.</p>
+        <div class="verdict">
+          <p><strong>Best fit if:</strong> Brand governance and security are top priorities, you want the strongest analyst-backed platform, and you're comfortable with a 3-year commitment for the best per-year value.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="dam-card brandfolder">
+      <div class="dam-card-header">
+        <h3>Brandfolder vs. Current Setup</h3>
+        <div class="sub">Replaces: Network server &bull; Complements: SharePoint</div>
+      </div>
+      <div class="dam-card-body">
+        <h4>What Changes</h4>
+        <p>Brandfolder would give the marketing team a beautifully designed, instantly intuitive asset library that requires almost no training. The Smart CDN means brand assets embedded on websites auto-update when changed in the DAM. The Asset Automation Engine can auto-organize uploads based on rules, eliminating the manual folder sorting we do on the server today.</p>
+        <h4>What It Solves That We Can't Do Today</h4>
+        <ul>
+          <li>Smart CDN embeds assets on websites that live-update from the DAM</li>
+          <li>Asset Automation Engine replaces manual folder organization</li>
+          <li>Strongest analytics show exactly which assets drive engagement</li>
+          <li>Smartsheet integration connects asset management to project management</li>
+        </ul>
+        <h4>What Stays the Same</h4>
+        <p>SharePoint for internal collaboration. If you use Smartsheet, Brandfolder creates a unified content-to-delivery pipeline.</p>
+        <div class="verdict">
+          <p><strong>Best fit if:</strong> User adoption is your biggest concern. Brandfolder's UI is the most intuitive of the four. Also ideal if you want the strongest analytics or are in the Smartsheet ecosystem.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="dam-card openasset">
+      <div class="dam-card-header">
+        <h3>OpenAsset vs. Current Setup</h3>
+        <div class="sub">Replaces: Network server &bull; Complements: SharePoint</div>
+      </div>
+      <div class="dam-card-body">
+        <h4>What Changes</h4>
+        <p>OpenAsset would transform how we organize project photography by linking every asset to its parent project, employee, and location. Instead of browsing folders by date or project number, you'd search by project name, client, market sector, or even the people in the photos. The InDesign/PowerPoint integration means proposals pull directly from the DAM.</p>
+        <h4>What It Solves That We Can't Do Today</h4>
+        <ul>
+          <li>Project-based organization replaces date/folder hierarchies on the server</li>
+          <li>Employee profiles link people to projects, certifications, and bios</li>
+          <li>Proposal/resume templates auto-populate from the asset library</li>
+          <li>Deltek/Unanet integration syncs project data (if applicable)</li>
+        </ul>
+        <h4>What Stays the Same</h4>
+        <p>SharePoint for internal docs. OpenAsset handles only AEC-specific marketing assets. It does not replace SharePoint for general collaboration.</p>
+        <div class="verdict">
+          <p><strong>Best fit if:</strong> Your primary use case is managing project photography and generating proposals/RFPs, and you want a platform that understands AEC workflows natively rather than forcing a general DAM into that role.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════ BOTTOM LINE ═══════════════ -->
+  <div class="bottom-line">
+    <h2>The Bottom Line</h2>
+    <p><strong>SharePoint is not a DAM.</strong> It's an excellent collaboration platform, but it was never designed to manage, search, or distribute visual creative assets. Using it for that purpose creates friction, slows teams down, and introduces brand risk.</p>
+    <p><strong>The network server is the biggest gap.</strong> It has zero search, zero metadata, and zero version control. Remote access exists for company-issued Windows PCs, but the marketing team works on Macs and has no remote access, and nobody can reach it from a phone or tablet. Access requires IT approval for every new user. Every minute spent browsing folders for the right file is a minute not spent on actual work. A DAM directly replaces this.</p>
+    <p><strong>Adobe Bridge is a tool, not a system.</strong> It can make one person faster, but it can't make a team more organized. Metadata stays siloed on each person's machine, there's no shared search, and there's no way to access assets from outside the office. Bridge works best as a companion to a DAM, not a substitute for one.</p>
+    <p><strong>The strongest path forward</strong> is a hybrid approach: keep SharePoint for what it does well (internal docs and collaboration), deploy a DAM for what it does well (creative asset management and distribution), and optionally keep Bridge as a power-user tool for designers. This isn't an all-or-nothing decision. It's about putting the right tool in the right role.</p>
+  </div>
+
+  <p class="footnote">
+    Comparison based on current Cummings Electrical infrastructure, vendor documentation &amp; industry research, February 2026
+  </p>
+
+</div>
+
+</body>
+</html>

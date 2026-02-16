@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cummings Electrical — DAM Pricing Comparison</title>
+  <title>Cummings Electrical - DAM Pricing Comparison</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
@@ -380,9 +380,11 @@
 <div class="container">
 
   <nav class="nav no-print">
-    <a href="index.html">Capabilities</a>
-    <a href="pricing.html" class="active">Pricing</a>
+    <a href="index.html">Home</a>
     <a href="summary.html">Summary</a>
+    <a href="capabilities.html">Capabilities</a>
+    <a href="current-vs-dam.html">Current vs. DAM</a>
+    <a href="pricing.html" class="active">Pricing</a>
   </nav>
 
   <div class="toolbar no-print">
@@ -401,7 +403,7 @@
 
   <div class="header">
     <h1 contenteditable="false" spellcheck="false" id="title">DAM Pricing Comparison</h1>
-    <p contenteditable="false" spellcheck="false" id="subtitle">Cummings Electrical — Pricing Overview Across Four DAM Solutions</p>
+    <p contenteditable="false" spellcheck="false" id="subtitle">Cummings Electrical | Pricing Overview Across Four DAM Solutions</p>
   </div>
 
   <div class="table-wrapper">
@@ -427,7 +429,7 @@
   </div>
 
   <p class="footnote" contenteditable="false" spellcheck="false">
-    Data sourced from vendor proposals &amp; pricing sheets — February 2026 &bull; Cummings Electrical DAM Evaluation &bull; All prices in USD
+    Data sourced from vendor proposals &amp; pricing sheets, February 2026 &bull; Cummings Electrical DAM Evaluation &bull; All prices in USD
   </p>
 </div>
 
@@ -464,14 +466,14 @@ const DEFAULT_DATA = [
       brandfolder: { detail: "$22,500 (1 year)" },
       openasset: { detail: "$27,250 (1 year)" } },
     { feature: "Auto-Renewal", style: "plan",
-      canto: { detail: "Yes — 30 days notice" },
+      canto: { detail: "Yes, 30 days notice" },
       bynder: { detail: "N/A" },
       brandfolder: { detail: "N/A" },
       openasset: { detail: "N/A" } },
   ]},
   { section: "Implementation & Onboarding", rows: [
     { feature: "Onboarding Fee", canto: { detail: "$4,000 (100% waived = $0)" }, bynder: { detail: "$9,700 (one-time)" }, brandfolder: { detail: "$6,000 (one-time)" }, openasset: { detail: "N/A" } },
-    { feature: "Onboarding Package", canto: { detail: "Standard — 60 days" }, bynder: { detail: "Complete Onboarding Management" }, brandfolder: { detail: "Premium — named resource, 90 days" }, openasset: { detail: "N/A" } },
+    { feature: "Onboarding Package", canto: { detail: "Standard, 60 days" }, bynder: { detail: "Complete Onboarding Management" }, brandfolder: { detail: "Premium, named resource, 90 days" }, openasset: { detail: "N/A" } },
     { feature: "Total First Year Cost", canto: { detail: "$62,752.50" }, bynder: { detail: "$33,700" }, brandfolder: { detail: "$28,500" }, openasset: { detail: "$27,250" } },
   ]},
   { section: "Users Included", rows: [
@@ -488,34 +490,34 @@ const DEFAULT_DATA = [
   { section: "Add-On User Pricing", rows: [
     { feature: "Additional Admin / Full User", canto: { detail: "N/A" }, bynder: { detail: "$960/user/yr" }, brandfolder: { detail: "N/A" }, openasset: { detail: "$5,000/user/yr (at 3 users)" } },
     { feature: "Additional Regular / Basic User", canto: { detail: "N/A" }, bynder: { detail: "$300/user/yr" }, brandfolder: { detail: "N/A" }, openasset: { detail: "$300/user/yr (at 10 users)" } },
-    { feature: "Additional Light Users", canto: { detail: "N/A — Unlimited" }, bynder: { detail: "20 pack: $600 / 50 pack: $1,200 / 100 pack: $1,800" }, brandfolder: { detail: "N/A — Unlimited Guests" }, openasset: { detail: "N/A" } },
+    { feature: "Additional Light Users", canto: { detail: "N/A, Unlimited" }, bynder: { detail: "20 pack: $600 / 50 pack: $1,200 / 100 pack: $1,800" }, brandfolder: { detail: "N/A, Unlimited Guests" }, openasset: { detail: "N/A" } },
     { feature: "Adobe CC Integration", canto: { detail: "Included with Power Users" }, bynder: { detail: "$480/user/yr" }, brandfolder: { detail: "$500/user/yr (5 included)" }, openasset: { detail: "Included" } },
   ]},
   { section: "Key Module & Add-On Pricing", rows: [
-    { feature: "Brand Templating", canto: { detail: "Brand Studio Pro — included" }, bynder: { detail: "Print Templates: $10,000/yr" }, brandfolder: { detail: "Content Automation — ?" }, openasset: { detail: "4 templates free; extra: $1,500 each or 5 for $5,000" } },
+    { feature: "Brand Templating", canto: { detail: "Brand Studio Pro, included" }, bynder: { detail: "Print Templates: $10,000/yr" }, brandfolder: { detail: "Content Automation: N/A" }, openasset: { detail: "4 templates free; extra: $1,500 each or 5 for $5,000" } },
     { feature: "Employee Module", canto: { detail: "N/A" }, bynder: { detail: "N/A" }, brandfolder: { detail: "N/A" }, openasset: { detail: "$4,250/yr (50 employee objects)" } },
     { feature: "AI Features", canto: { detail: "All AI included (Smart Tags, OCR, Facial, Transcription)" }, bynder: { detail: "AI Search Experience included" }, brandfolder: { detail: "AI Auto-Tagging + Video AI included" }, openasset: { detail: "Basic AI included in base" } },
     { feature: "Shred.ai (AI Proposal Writing)", canto: { detail: "N/A" }, bynder: { detail: "N/A" }, brandfolder: { detail: "N/A" }, openasset: { detail: "$35,000/yr (or $28,000 bundled at 20% off)" } },
     { feature: "With Shred.ai Total", canto: { detail: "N/A" }, bynder: { detail: "N/A" }, brandfolder: { detail: "N/A" }, openasset: { detail: "$62,250/yr (or $49,800 Year 1 bundled)" } },
-    { feature: "Connectors / Integrations", canto: { detail: "All included" }, bynder: { detail: "Included in plan" }, brandfolder: { detail: "Included; HubSpot config $1,500 one-time" }, openasset: { detail: "Priced separately — $0 in current proposal" } },
+    { feature: "Connectors / Integrations", canto: { detail: "All included" }, bynder: { detail: "Included in plan" }, brandfolder: { detail: "Included; HubSpot config $1,500 one-time" }, openasset: { detail: "Priced separately, $0 in current proposal" } },
     { feature: "SSO / SAML", canto: { detail: "Included" }, bynder: { detail: "Included" }, brandfolder: { detail: "Included (Premium+)" }, openasset: { detail: "Included" } },
   ]},
   { section: "OpenAsset List Pricing (by User Count)", rows: [
-    { feature: "3 Full Users", canto: { detail: "—" }, bynder: { detail: "—" }, brandfolder: { detail: "—" }, openasset: { detail: "$15,000 (Basic: included)" } },
-    { feature: "5 Full Users", canto: { detail: "—" }, bynder: { detail: "—" }, brandfolder: { detail: "—" }, openasset: { detail: "$17,500 (Basic: $2,000)" } },
-    { feature: "10 Full Users", canto: { detail: "—" }, bynder: { detail: "—" }, brandfolder: { detail: "—" }, openasset: { detail: "$20,000 (Basic: $3,000)" } },
-    { feature: "25 Full Users", canto: { detail: "—" }, bynder: { detail: "—" }, brandfolder: { detail: "—" }, openasset: { detail: "$27,500 (Basic: $6,000)" } },
-    { feature: "50 Full Users", canto: { detail: "—" }, bynder: { detail: "—" }, brandfolder: { detail: "—" }, openasset: { detail: "$35,000 (Basic: $8,000)" } },
-    { feature: "100 Full Users", canto: { detail: "—" }, bynder: { detail: "—" }, brandfolder: { detail: "—" }, openasset: { detail: "$50,000 (Basic: $12,000)" } },
-    { feature: "Employee Module (E1)", canto: { detail: "—" }, bynder: { detail: "—" }, brandfolder: { detail: "—" }, openasset: { detail: "5: $1,500 / 10: $2,000 / 50: $4,250 / 100: $5,750" } },
+    { feature: "3 Full Users", canto: { detail: "-" }, bynder: { detail: "-" }, brandfolder: { detail: "-" }, openasset: { detail: "$15,000 (Basic: included)" } },
+    { feature: "5 Full Users", canto: { detail: "-" }, bynder: { detail: "-" }, brandfolder: { detail: "-" }, openasset: { detail: "$17,500 (Basic: $2,000)" } },
+    { feature: "10 Full Users", canto: { detail: "-" }, bynder: { detail: "-" }, brandfolder: { detail: "-" }, openasset: { detail: "$20,000 (Basic: $3,000)" } },
+    { feature: "25 Full Users", canto: { detail: "-" }, bynder: { detail: "-" }, brandfolder: { detail: "-" }, openasset: { detail: "$27,500 (Basic: $6,000)" } },
+    { feature: "50 Full Users", canto: { detail: "-" }, bynder: { detail: "-" }, brandfolder: { detail: "-" }, openasset: { detail: "$35,000 (Basic: $8,000)" } },
+    { feature: "100 Full Users", canto: { detail: "-" }, bynder: { detail: "-" }, brandfolder: { detail: "-" }, openasset: { detail: "$50,000 (Basic: $12,000)" } },
+    { feature: "Employee Module (E1)", canto: { detail: "-" }, bynder: { detail: "-" }, brandfolder: { detail: "-" }, openasset: { detail: "5: $1,500 / 10: $2,000 / 50: $4,250 / 100: $5,750" } },
   ]},
   { section: "Brandfolder Alternative Tier (Core)", rows: [
-    { feature: "Core Plan Annual Fee", canto: { detail: "—" }, bynder: { detail: "—" }, brandfolder: { detail: "$10,000/yr" }, openasset: { detail: "—" } },
-    { feature: "Core Onboarding", canto: { detail: "—" }, bynder: { detail: "—" }, brandfolder: { detail: "$3,500 (one-time)" }, openasset: { detail: "—" } },
-    { feature: "Core Users", canto: { detail: "—" }, bynder: { detail: "—" }, brandfolder: { detail: "7 Users + Unlimited Guests" }, openasset: { detail: "—" } },
-    { feature: "Core Storage", canto: { detail: "—" }, bynder: { detail: "—" }, brandfolder: { detail: "3 TB" }, openasset: { detail: "—" } },
-    { feature: "Core Portals / Brandguides", canto: { detail: "—" }, bynder: { detail: "—" }, brandfolder: { detail: "1 Portal / 1 Brandguide / 1 Workspace" }, openasset: { detail: "—" } },
-    { feature: "Core Total First Year", canto: { detail: "—" }, bynder: { detail: "—" }, brandfolder: { detail: "$13,500" }, openasset: { detail: "—" } },
+    { feature: "Core Plan Annual Fee", canto: { detail: "-" }, bynder: { detail: "-" }, brandfolder: { detail: "$10,000/yr" }, openasset: { detail: "-" } },
+    { feature: "Core Onboarding", canto: { detail: "-" }, bynder: { detail: "-" }, brandfolder: { detail: "$3,500 (one-time)" }, openasset: { detail: "-" } },
+    { feature: "Core Users", canto: { detail: "-" }, bynder: { detail: "-" }, brandfolder: { detail: "7 Users + Unlimited Guests" }, openasset: { detail: "-" } },
+    { feature: "Core Storage", canto: { detail: "-" }, bynder: { detail: "-" }, brandfolder: { detail: "3 TB" }, openasset: { detail: "-" } },
+    { feature: "Core Portals / Brandguides", canto: { detail: "-" }, bynder: { detail: "-" }, brandfolder: { detail: "1 Portal / 1 Brandguide / 1 Workspace" }, openasset: { detail: "-" } },
+    { feature: "Core Total First Year", canto: { detail: "-" }, bynder: { detail: "-" }, brandfolder: { detail: "$13,500" }, openasset: { detail: "-" } },
   ]},
   { section: "Support & CSM", rows: [
     { feature: "Dedicated CSM", canto: { detail: "Included" }, bynder: { detail: "Standard Success Package" }, brandfolder: { detail: "Account manager + live chat" }, openasset: { detail: "N/A" } },

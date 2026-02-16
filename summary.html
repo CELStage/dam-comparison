@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cummings Electrical — DAM Platform Summary</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f0f2f5;
+      color: #2d3748;
+      padding: 40px 20px;
+    }
+
+    .container { max-width: 1320px; margin: 0 auto; }
+
+    /* ── NAV ── */
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 16px;
+      padding: 12px 20px;
+      background: #1a202c;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    }
+    .nav a {
+      color: #a0aec0;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 8px;
+      transition: all 0.15s;
+    }
+    .nav a:hover { color: #fff; background: rgba(255,255,255,0.08); }
+    .nav a.active { color: #fff; background: #4f46e5; }
+
+    /* ── TOOLBAR ── */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding: 14px 20px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .btn-success { background: #059669; color: #fff; }
+
+    /* ── HEADER ── */
+    .header { text-align: center; margin-bottom: 36px; }
+
+    .header h1 {
+      font-size: 32px;
+      font-weight: 800;
+      color: #1a202c;
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+
+    .header p {
+      font-size: 15px;
+      color: #718096;
+      font-weight: 500;
+      max-width: 680px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ── PLATFORM CARDS ── */
+    .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 36px; }
+    @media (max-width: 900px) { .cards { grid-template-columns: 1fr; } }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-header {
+      padding: 24px 28px 16px;
+      color: #fff;
+      position: relative;
+    }
+    .card-header h2 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      margin-bottom: 4px;
+    }
+    .card-header .tagline {
+      font-size: 13px;
+      font-weight: 500;
+      opacity: 0.85;
+    }
+    .card-header .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+    }
+    .card-header .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(4px);
+    }
+
+    .card.canto .card-header       { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+    .card.bynder .card-header      { background: linear-gradient(135deg, #3498db, #2471a3); }
+    .card.brandfolder .card-header { background: linear-gradient(135deg, #2ecc71, #1e8449); }
+    .card.openasset .card-header   { background: linear-gradient(135deg, #f39c12, #d68910); }
+
+    .card-body {
+      padding: 24px 28px 28px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .card-section h3 {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #a0aec0;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card-section h3 .icon { font-size: 14px; }
+
+    .card-section p {
+      font-size: 13.5px;
+      color: #4a5568;
+      line-height: 1.65;
+    }
+
+    .pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      list-style: none;
+    }
+    .pill-list li {
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .pill-list.strengths li { background: #d1fae5; color: #065f46; }
+    .pill-list.weaknesses li { background: #fee2e2; color: #991b1b; }
+
+    .best-for {
+      background: #f7fafc;
+      border-radius: 10px;
+      padding: 14px 18px;
+      border-left: 4px solid;
+      margin-top: auto;
+    }
+    .card.canto .best-for       { border-color: #e74c3c; }
+    .card.bynder .best-for      { border-color: #3498db; }
+    .card.brandfolder .best-for { border-color: #2ecc71; }
+    .card.openasset .best-for   { border-color: #f39c12; }
+
+    .best-for h3 {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #718096;
+      margin-bottom: 6px;
+    }
+    .best-for p {
+      font-size: 13px;
+      color: #2d3748;
+      line-height: 1.55;
+      font-weight: 500;
+    }
+
+    /* ── BOTTOM LINE ── */
+    .bottom-line {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+      padding: 32px 36px;
+      margin-bottom: 24px;
+    }
+    .bottom-line h2 {
+      font-size: 20px;
+      font-weight: 800;
+      color: #1a202c;
+      margin-bottom: 18px;
+      letter-spacing: -0.3px;
+    }
+    .bottom-line table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .bottom-line th, .bottom-line td {
+      padding: 12px 16px;
+      font-size: 13px;
+      text-align: left;
+      border-bottom: 1px solid #edf2f7;
+      vertical-align: top;
+    }
+    .bottom-line th {
+      font-weight: 700;
+      color: #fff;
+      text-align: center;
+    }
+    .bottom-line th:first-child {
+      background: #fff;
+      color: #718096;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-align: left;
+    }
+    .bottom-line th:nth-child(2) { background: #e74c3c; border-radius: 8px 0 0 0; }
+    .bottom-line th:nth-child(3) { background: #3498db; }
+    .bottom-line th:nth-child(4) { background: #2ecc71; }
+    .bottom-line th:nth-child(5) { background: #f39c12; border-radius: 0 8px 0 0; }
+    .bottom-line td { text-align: center; color: #4a5568; }
+    .bottom-line td:first-child { text-align: left; font-weight: 600; color: #2d3748; }
+    .bottom-line tr:last-child td { border-bottom: none; }
+
+    .rating { font-weight: 700; }
+    .rating.high { color: #059669; }
+    .rating.mid { color: #d97706; }
+    .rating.low { color: #dc2626; }
+
+    .footnote {
+      text-align: center;
+      font-size: 12px;
+      color: #a0aec0;
+      padding: 16px 0 0;
+    }
+
+    /* ── PRINT / PDF ── */
+    @media print {
+      body { background: #fff; padding: 10px; }
+      .toolbar, .nav { display: none !important; }
+      .cards { grid-template-columns: 1fr 1fr; }
+      .card, .bottom-line { box-shadow: none; border: 1px solid #e2e8f0; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <nav class="nav no-print">
+    <a href="index.html">Capabilities</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="summary.html" class="active">Summary</a>
+  </nav>
+
+  <div class="toolbar no-print">
+    <button class="btn btn-success" onclick="window.print()">Export PDF</button>
+  </div>
+
+  <div class="header">
+    <h1>Platform Summary</h1>
+    <p>An honest, side-by-side look at each DAM solution — where they shine, where they fall short, and which type of organization they serve best.</p>
+  </div>
+
+  <!-- ════════════════════ PLATFORM CARDS ════════════════════ -->
+  <div class="cards">
+
+    <!-- ── CANTO ── -->
+    <div class="card canto">
+      <div class="card-header">
+        <h2>Canto</h2>
+        <div class="tagline">The established all-rounder with deep creative-tool roots</div>
+        <div class="badges">
+          <span class="badge">Est. 1990</span>
+          <span class="badge">2,500+ customers</span>
+          <span class="badge">G2 Leader 2025</span>
+          <span class="badge">ISO Certified</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-section">
+          <h3><span class="icon">&#9733;</span> Market Position</h3>
+          <p>Canto is one of the longest-standing DAM vendors in the market, with over 30 years of history. It occupies a strong mid-market position, appealing to organizations that want a full-featured DAM without the complexity of the largest enterprise platforms. It has recently expanded through acquisitions (MerlinOne, ImageRelay) and launched the Canto XI platform to broaden its AI and automation story.</p>
+        </div>
+        <div class="card-section">
+          <h3><span class="icon">&#10003;</span> Key Strengths</h3>
+          <ul class="pill-list strengths">
+            <li>Intuitive, visual interface</li>
+            <li>Deep Adobe CC + MS Office integration</li>
+            <li>Unlimited portals, style guides, share links</li>
+            <li>Strong AI tagging (images, video, facial, OCR)</li>
+            <li>Brand Studio templating (InDesign import)</li>
+            <li>Dedicated CSM included</li>
+            <li>Mobile + desktop apps</li>
+          </ul>
+        </div>
+        <div class="card-section">
+          <h3><span class="icon">&#9888;</span> Honest Weaknesses</h3>
+          <ul class="pill-list weaknesses">
+            <li>Setup is time-intensive (metadata, tagging)</li>
+            <li>Inflexible contracts (push for multi-year)</li>
+            <li>Limited scalability vs. top enterprise DAMs</li>
+            <li>Innovation largely via acquisition, not in-house</li>
+            <li>No native CDN / asset delivery network</li>
+            <li>No analytics dashboard in base plan</li>
+          </ul>
+        </div>
+        <div class="card-section">
+          <h3><span class="icon">&#128269;</span> Why Choose Canto</h3>
+          <p>Canto is a strong choice when your team is heavily invested in Adobe Creative Cloud and Microsoft Office and needs tight, bidirectional integrations out of the box. Its unlimited portals and style guides are ideal for organizations managing multiple brands or client-facing asset libraries. The interface is approachable enough for non-technical teams to adopt without heavy training, and the included Brand Studio gives marketing teams templating power without add-on costs.</p>
+        </div>
+        <div class="best-for">
+          <h3>Best For</h3>
+          <p>Mid-size marketing teams (50-500 employees) that rely on Adobe + Microsoft daily, need unlimited brand portals, and want a single platform with AI tagging + templating included — without buying separate modules.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BYNDER ── -->
+    <div class="card bynder">
+      <div class="card-header">
+        <h2>Bynder</h2>
+        <div class="tagline">The enterprise-grade powerhouse built for brand governance at scale</div>
+        <div class="badges">
+          <span class="badge">Gartner MQ Leader 2025</span>
+          <span class="badge">Forrester Wave Leader</span>
+          <span class="badge">4,000+ customers</span>
+          <span class="badge">ISO 27001 + SOC 2 + HIPAA</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-section">
+          <h3><span class="icon">&#9733;</span> Market Position</h3>
+          <p>Bynder is the only DAM vendor recognized as a Leader by all three major analysts — Gartner, Forrester, and IDC. With 4,000+ customers including Vodafone, Siemens, and Campari, it dominates the enterprise segment. Bynder invests heavily in R&D (100M+ over 3 years, 200+ developers) and has the largest integration ecosystem in the space (155+ integrations). It is a pure-play DAM company, meaning 100% of its focus is on digital asset management.</p>
+        </div>
+        <div class="card-section">
+          <h3><span class="icon">&#10003;</span> Key Strengths</h3>
+          <ul class="pill-list strengths">
+            <li>Triple analyst Leader (Gartner, Forrester, IDC)</li>
+            <li>155+ integrations (largest ecosystem)</li>
+            <li>AI Agents + natural language search</li>
+            <li>Best-in-class brand governance</li>
+            <li>24/7 support in 4 languages</li>
+            <li>CloudFront CDN included</li>
+          </ul>
+        </div>
+        <div class="card-section">
+          <h3><span class="icon">&#9888;</span> Honest Weaknesses</h3>
+          <ul class="pill-list weaknesses">
+            <li>3-year contract commitment required</li>
+            <li>Limited users in base plan (2 admin, 10 regular)</li>
+            <li>Permission management can be confusing</li>
+            <li>Video uploads reported as slow</li>
+            <li>No free trial available</li>
+            <li>Can feel over-engineered for small teams</li>
+          </ul>
+        </div>
+        <div class="card-section">
+          <h3><span class="icon">&#128269;</span> Why Choose Bynder</h3>
+          <p>Bynder is the safest enterprise bet. Its analyst pedigree means it has been validated at the deepest levels of security, scalability, and feature completeness. Choose Bynder when brand governance and compliance are paramount — it excels at ensuring every asset, across every team, stays on-brand. The CDN + analytics modules give you visibility into how assets are performing across channels. Its AI Agents can enforce brand rules automatically.</p>
+        </div>
+        <div class="best-for">
+          <h3>Best For</h3>
+          <p>Large organizations with strict brand compliance needs, global teams, and a commitment to a long-term DAM strategy. Ideal when security certifications (SOC 2, ISO, HIPAA) are non-negotiable and you need the deepest integration ecosystem.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BRANDFOLDER ── -->
+    <div class="card brandfolder">
+      <div class="card-header">
+        <h2>Brandfolder</h2>
+        <div class="tagline">The beautifully intuitive DAM backed by Smartsheet's ecosystem</div>
+        <div class="badges">
+          <span class="badge">Smartsheet Company</span>
+          <span class="badge">G2 #1 DAM</span>
+          <span class="badge">273% ROI (Forrester)</span>
+          <span class="badge">SOC 2 Type 2</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-section">
+          <h3><span class="icon">&#9733;</span> Market Position</h3>
+          <p>Brandfolder, acquired by Smartsheet in 2020, stands out for its visually stunning interface and powerful AI-driven intelligence. It consistently ranks as the #1 DAM on G2 and boasts a 273% ROI figure from a Forrester study. Being part of Smartsheet gives it a unique advantage: native integration with project management, resource planning, and collaborative work management. Customers include Lyft, Kroger, Anheuser-Busch, and Zoom.</p>
+        </div>
+        <div class="card-section">
+          <h3><span class="icon">&#10003;</span> Key Strengths</h3>
+          <ul class="pill-list strengths">
+            <li>Best-in-class UI / UX design</li>
+            <li>Smart CDN (embed + live-update assets)</li>
+            <li>Asset Automation Engine (if/then rules)</li>
+            <li>Strongest analytics + Insights Data Connector</li>
+            <li>Smartsheet ecosystem (project mgmt + DAM)</li>
+            <li>Duplicate detection + similarity engine</li>
+          </ul>
+        </div>
+        <div class="card-section">
+          <h3><span class="icon">&#9888;</span> Honest Weaknesses</h3>
+          <ul class="pill-list weaknesses">
+            <li>Time-consuming initial setup and tagging</li>
+            <li>Search can be clunky without proper taxonomy</li>
+            <li>Advanced features gated behind Premium/Enterprise</li>
+            <li>Approval workflows feel heavy for lean teams</li>
+            <li>No mobile app</li>
+            <li>Smartsheet dependency may not suit all orgs</li>
+          </ul>
+        </div>
+        <div class="card-section">
+          <h3><span class="icon">&#128269;</span> Why Choose Brandfolder</h3>
+          <p>Choose Brandfolder when user adoption is your top priority. Its modern, beautiful interface requires minimal training — stakeholders will actually want to use it. The Smart CDN is a standout: embed assets on websites that auto-update when you change them in the DAM. The Asset Automation Engine eliminates manual organizing with trigger-based rules. And if you already use Smartsheet for project management, the integration creates a seamless content-to-delivery pipeline.</p>
+        </div>
+        <div class="best-for">
+          <h3>Best For</h3>
+          <p>Marketing teams that value design and user experience, organizations already in the Smartsheet ecosystem, and teams that need strong analytics to tie asset performance to ROI.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── OPENASSET ── -->
+    <div class="card openasset">
+      <div class="card-header">
+        <h2>OpenAsset</h2>
+        <div class="tagline">The AEC specialist — purpose-built for architecture, engineering & construction</div>
+        <div class="badges">
+          <span class="badge">AEC-Specific</span>
+          <span class="badge">1,000+ AEC firms</span>
+          <span class="badge">G2 Leader 2026</span>
+          <span class="badge">4.7/5 Rating</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-section">
+          <h3><span class="icon">&#9733;</span> Market Position</h3>
+          <p>OpenAsset occupies a unique niche: it is the only DAM solution purpose-built for the AEC industry. While general DAMs treat assets as files to organize, OpenAsset treats them as project history — linking every photo, document, and credential to specific projects, employees, and locations. It integrates natively with AEC-specific tools (Deltek Vision, Unanet, Procore) that no general DAM supports. Its optional Shred.ai module adds AI-powered proposal and RFP writing, a capability entirely absent from competitors.</p>
+        </div>
+        <div class="card-section">
+          <h3><span class="icon">&#10003;</span> Key Strengths</h3>
+          <ul class="pill-list strengths">
+            <li>Only DAM built specifically for AEC</li>
+            <li>Project-based asset organization</li>
+            <li>Employee profiles (certs, skills, bios)</li>
+            <li>Proposal + resume template generation</li>
+            <li>Deltek, Unanet, Procore integrations</li>
+            <li>Shred.ai for AI proposal writing (optional)</li>
+          </ul>
+        </div>
+        <div class="card-section">
+          <h3><span class="icon">&#9888;</span> Honest Weaknesses</h3>
+          <ul class="pill-list weaknesses">
+            <li>Not a general-purpose DAM</li>
+            <li>Limited creative tool integrations</li>
+            <li>No brand portals, style guides, or CDN</li>
+            <li>No approval workflows or annotations</li>
+            <li>No native analytics dashboard</li>
+            <li>Smaller integration ecosystem (15+)</li>
+            <li>No mobile app</li>
+          </ul>
+        </div>
+        <div class="card-section">
+          <h3><span class="icon">&#128269;</span> Why Choose OpenAsset</h3>
+          <p>If you are an AEC firm, OpenAsset understands your world in a way no general DAM ever will. It connects photos to the projects they belong to, tracks employee certifications and experience, generates proposal-ready resumes and project sheets, and syncs with the ERP systems (Deltek, Unanet) that run your business. A general DAM would require extensive custom development to achieve even a fraction of this. The Shred.ai add-on is a game-changer for firms that respond to many RFPs — it can analyze requirements, draft narratives, and check compliance automatically.</p>
+        </div>
+        <div class="best-for">
+          <h3>Best For</h3>
+          <p>Architecture, engineering, and construction firms where the primary DAM use case is managing project photography, employee credentials, and generating proposals — not general brand marketing. If your workflow revolves around winning projects through RFPs, OpenAsset is uniquely qualified.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ════════════════════ COMPARISON MATRIX ════════════════════ -->
+  <div class="bottom-line">
+    <h2>Head-to-Head Quick Reference</h2>
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th>Canto</th>
+          <th>Bynder</th>
+          <th>Brandfolder</th>
+          <th>OpenAsset</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Analyst Recognition</td>
+          <td>G2 Leader</td>
+          <td><span class="rating high">Gartner + Forrester + IDC Leader</span></td>
+          <td>G2 #1 DAM</td>
+          <td>G2 Leader (AEC)</td>
+        </tr>
+        <tr>
+          <td>Ease of Adoption</td>
+          <td><span class="rating high">High</span></td>
+          <td><span class="rating mid">Medium</span></td>
+          <td><span class="rating high">Highest</span></td>
+          <td><span class="rating mid">Medium (AEC-focused)</span></td>
+        </tr>
+        <tr>
+          <td>Enterprise Scalability</td>
+          <td><span class="rating mid">Medium</span></td>
+          <td><span class="rating high">Highest</span></td>
+          <td><span class="rating high">High</span></td>
+          <td><span class="rating mid">Medium (niche)</span></td>
+        </tr>
+        <tr>
+          <td>AI Capabilities</td>
+          <td>Tagging, OCR, Facial, Video</td>
+          <td><span class="rating high">AI Agents, NLP Search, Dedup</span></td>
+          <td>Auto-Tag, Similarity, Custom ML</td>
+          <td>Basic + Shred.ai (add-on)</td>
+        </tr>
+        <tr>
+          <td>Integration Ecosystem</td>
+          <td>45+ integrations</td>
+          <td><span class="rating high">155+ integrations</span></td>
+          <td>40+ integrations</td>
+          <td>15+ (AEC-specific)</td>
+        </tr>
+        <tr>
+          <td>Creative Tool Depth</td>
+          <td><span class="rating high">Adobe + MS Office + Figma + Canva</span></td>
+          <td>Adobe + Figma + Canva + SDK toolkit</td>
+          <td>Adobe + MS Office + Figma + Canva</td>
+          <td>InDesign only</td>
+        </tr>
+        <tr>
+          <td>Marketing / Sales Tools</td>
+          <td>HubSpot, Salesforce, Marketo</td>
+          <td><span class="rating high">HubSpot, Salesforce, Marketo, Sitecore</span></td>
+          <td>HubSpot, Salesforce, Marketo</td>
+          <td><span class="rating low">Salesforce only</span></td>
+        </tr>
+        <tr>
+          <td>Brand Governance</td>
+          <td>Portals + Style Guides</td>
+          <td><span class="rating high">Brand Guidelines + Governance Agents</span></td>
+          <td>Portals + Brandguide + CDN</td>
+          <td><span class="rating low">Not available</span></td>
+        </tr>
+        <tr>
+          <td>Analytics</td>
+          <td><span class="rating low">Not in base plan</span></td>
+          <td>Analytics Light included</td>
+          <td><span class="rating high">Insights + BI Data Connector</span></td>
+          <td><span class="rating low">Not available</span></td>
+        </tr>
+        <tr>
+          <td>AEC / Proposal Features</td>
+          <td><span class="rating low">None</span></td>
+          <td><span class="rating low">None</span></td>
+          <td><span class="rating low">None</span></td>
+          <td><span class="rating high">Full suite (resumes, project sheets, RFP AI)</span></td>
+        </tr>
+        <tr>
+          <td>Contract Flexibility</td>
+          <td><span class="rating low">2-year minimum</span></td>
+          <td><span class="rating low">3-year minimum</span></td>
+          <td><span class="rating high">1-year term</span></td>
+          <td><span class="rating high">1-year term</span></td>
+        </tr>
+        <tr>
+          <td>Security Certifications</td>
+          <td>ISO Certified</td>
+          <td><span class="rating high">ISO 27001, SOC 2, HIPAA, GDPR, CCPA</span></td>
+          <td>SOC 2 Type 2</td>
+          <td>Enterprise-grade</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="footnote">
+    Data sourced from Gartner Peer Insights, G2, Forrester, TrustRadius, vendor proposals &amp; product websites — February 2026 &bull; Cummings Electrical DAM Evaluation
+  </p>
+
+</div>
+
+<script>
+</script>
+
+</body>
+</html>

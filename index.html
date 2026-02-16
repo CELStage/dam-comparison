@@ -306,10 +306,26 @@
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+    /* ── LOCK MODE ── */
+    .btn-lock { background: #f59e0b; color: #fff; }
+    .btn-lock:hover { background: #d97706; }
+    .btn-lock.unlocked { background: #10b981; }
+    .btn-lock.unlocked:hover { background: #059669; }
+
+    body.locked .edit-only { display: none !important; }
+    body.locked .vendor-cell { cursor: default; }
+    body.locked .vendor-cell:hover { background: transparent; border-radius: 0; }
+    body.locked .check:hover { transform: none; }
+    body.locked .feature-name:hover { background: transparent; padding: 0; }
+    body.locked .detail:hover { background: transparent; }
+    body.locked .detail:empty::before { display: none; }
+    body.locked .section-row td:first-child:hover { background: #edf2f7; cursor: default; }
+    body.locked .header [contenteditable]:hover { background: transparent; }
+
     /* ── PRINT / PDF ── */
     @media print {
       body { background: #fff; padding: 10px; }
-      .toolbar, .row-actions, .section-actions, .btn-sm, .toast { display: none !important; }
+      .toolbar, .row-actions, .section-actions, .edit-only, .btn-sm, .toast { display: none !important; }
       .table-wrapper { box-shadow: none; border: 1px solid #e2e8f0; }
       thead th { position: static; }
       .vendor-cell { cursor: default; }
@@ -324,14 +340,15 @@
 
   <div class="toolbar no-print">
     <div class="toolbar-left">
-      <div class="hint"><span></span> Click a cell to toggle check / dash</div>
-      <div class="hint"><span></span> Click any text to edit in place</div>
+      <div class="hint edit-only"><span></span> Click a cell to toggle check / dash</div>
+      <div class="hint edit-only"><span></span> Click any text to edit in place</div>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-      <button class="btn btn-outline" onclick="addSection()">+ Section</button>
-      <button class="btn btn-outline" id="undo-btn" onclick="undo()" disabled>&#8617; Undo</button>
-      <button class="btn btn-primary" onclick="saveBaseline()">&#128190; Save as Baseline</button>
-      <button class="btn btn-outline" onclick="resetData()">&#8634; Reset</button>
+      <button class="btn btn-lock" id="lock-btn" onclick="toggleLock()">&#128274; Unlock Editing</button>
+      <button class="btn btn-outline edit-only" onclick="addSection()">+ Section</button>
+      <button class="btn btn-outline edit-only" id="undo-btn" onclick="undo()" disabled>&#8617; Undo</button>
+      <button class="btn btn-primary edit-only" onclick="saveBaseline()">&#128190; Save as Baseline</button>
+      <button class="btn btn-outline edit-only" onclick="resetData()">&#8634; Reset</button>
       <button class="btn btn-success" onclick="exportPDF()">Export PDF</button>
     </div>
   </div>
@@ -446,10 +463,37 @@ const DEFAULT_DATA = [
 
 /* ── State ── */
 let data = JSON.parse(JSON.stringify(DEFAULT_DATA));
+let locked = true;
 const undoStack = [];
 const MAX_UNDO = 10;
 
 function clone(obj) { return JSON.parse(JSON.stringify(obj)); }
+
+/* ── Lock / Unlock ── */
+
+function toggleLock() {
+  if (!locked) {
+    syncTextFromDOM();
+    persistData();
+  }
+  locked = !locked;
+  applyLockState();
+  render();
+  toast(locked ? 'Editing locked' : 'Editing unlocked');
+}
+
+function applyLockState() {
+  document.body.classList.toggle('locked', locked);
+  const btn = document.getElementById('lock-btn');
+  if (!btn) return;
+  if (locked) {
+    btn.innerHTML = '&#128274; Unlock Editing';
+    btn.classList.remove('unlocked');
+  } else {
+    btn.innerHTML = '&#128275; Lock Editing';
+    btn.classList.add('unlocked');
+  }
+}
 
 /* Push a snapshot onto the undo stack BEFORE mutating data */
 function pushUndo() {
@@ -532,14 +576,15 @@ function onBlurSave() {
 function render() {
   const body = document.getElementById('table-body');
   body.innerHTML = '';
+  const ce = locked ? 'false' : 'true';
 
   data.forEach((section, si) => {
     const sectionTr = document.createElement('tr');
     sectionTr.className = 'section-row';
     sectionTr.innerHTML =
       '<td colspan="5">' +
-        '<span class="section-name" contenteditable="true" spellcheck="false">' + esc(section.section) + '</span>' +
-        '<span class="section-actions no-print">' +
+        '<span class="section-name" contenteditable="' + ce + '" spellcheck="false">' + esc(section.section) + '</span>' +
+        '<span class="section-actions no-print edit-only">' +
           '<button class="btn btn-sm btn-outline" onclick="addRow(' + si + ')">+ Feature</button>' +
           '<button class="btn btn-sm btn-danger" onclick="deleteSection(' + si + ')" title="Delete section">&times;</button>' +
         '</span>' +
@@ -552,8 +597,8 @@ function render() {
       tr.dataset.row = ri;
 
       let html = '<td>' +
-        '<span class="feature-name" contenteditable="true" spellcheck="false">' + esc(row.feature) + '</span>' +
-        '<span class="row-actions no-print">' +
+        '<span class="feature-name" contenteditable="' + ce + '" spellcheck="false">' + esc(row.feature) + '</span>' +
+        '<span class="row-actions no-print edit-only">' +
           '<button class="row-action-btn" onclick="deleteRow(' + si + ',' + ri + ')" title="Delete">&times;</button>' +
         '</span>' +
       '</td>';
@@ -566,7 +611,7 @@ function render() {
         } else {
           html += '<span class="dash">\u2014</span>';
         }
-        html += '<div class="detail" data-vendor="' + v + '" contenteditable="true" spellcheck="false" onclick="event.stopPropagation()">' + esc(cell.detail) + '</div>';
+        html += '<div class="detail" data-vendor="' + v + '" contenteditable="' + ce + '" spellcheck="false" onclick="event.stopPropagation()">' + esc(cell.detail) + '</div>';
         html += '</td>';
       });
 
@@ -575,8 +620,16 @@ function render() {
     });
   });
 
+  updateHeaderEditable();
   attachAutoSave();
   updateUndoBtn();
+}
+
+function updateHeaderEditable() {
+  const ce = locked ? 'false' : 'true';
+  document.querySelectorAll('.header [contenteditable], thead th[contenteditable], .footnote[contenteditable]').forEach(el => {
+    el.setAttribute('contenteditable', ce);
+  });
 }
 
 function attachAutoSave() {
@@ -592,6 +645,7 @@ function attachAutoSave() {
 /* ── Actions (all push undo BEFORE mutating) ── */
 
 function toggleCheck(event, si, ri, vendor) {
+  if (locked) return;
   if (event.target.closest('[contenteditable="true"]')) return;
   pushUndo();
   data[si].rows[ri][vendor].on = !data[si].rows[ri][vendor].on;
@@ -720,6 +774,7 @@ document.addEventListener('keydown', e => {
 
 /* ── Init ── */
 loadSaved();
+applyLockState();
 render();
 </script>
 

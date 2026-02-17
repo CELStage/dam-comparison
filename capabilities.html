@@ -3,357 +3,311 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cummings Electrical - DAM Platform Comparison</title>
+  <title>Cummings Electrical - DAM Capabilities Comparison</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Roboto+Condensed:wght@400;700&display=swap');
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
       background: #f0f2f5;
       color: #2d3748;
-      padding: 40px 20px;
+      padding: 56px 20px 40px 20px;
     }
 
     .container { max-width: 1320px; margin: 0 auto; }
 
-    /* ── TOOLBAR ── */
+    /* -- NAV (top bar) -- */
+    .top-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 20px; background: rgba(0,41,56,0.95);
+      backdrop-filter: blur(8px); border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .top-nav .site-links {
+      display: flex; gap: 8px;
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .top-nav .site-links::-webkit-scrollbar { display: none; }
+    .top-nav a {
+      color: #CCDCE2; text-decoration: none; font-size: 12px;
+      font-weight: 500; padding: 5px 12px; border-radius: 6px;
+      transition: all 0.15s; white-space: nowrap; flex-shrink: 0;
+      font-family: 'Roboto Condensed', 'Roboto', sans-serif;
+    }
+    .top-nav a:hover { color: #fff; background: rgba(255,255,255,0.1); }
+    .top-nav a.active { color: #fff; background: #004F6E; }
+    .top-nav .nav-btn {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 12px; border: none; border-radius: 6px;
+      font-family: 'Roboto Condensed', 'Roboto', sans-serif;
+      font-size: 11px; font-weight: 700; cursor: pointer;
+      background: #4CAF50; color: #fff; transition: all 0.15s;
+      white-space: nowrap; flex-shrink: 0; margin-left: 12px;
+    }
+    .top-nav .nav-btn:hover { background: #388E3C; }
+
+    /* -- TOOLBAR -- */
     .toolbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 20px;
-      padding: 14px 20px;
-      background: #fff;
-      border-radius: 12px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 10px; margin-bottom: 20px; padding: 14px 20px;
+      background: #fff; border-radius: 12px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.06);
     }
-
-    .toolbar-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-
-    .toolbar .hint {
-      font-size: 12px;
-      color: #a0aec0;
-      display: flex;
-      align-items: center;
-      gap: 5px;
+    .toolbar-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .toolbar-left .hint {
+      font-size: 12px; color: #718096; display: flex; align-items: center; gap: 5px;
     }
-    .toolbar .hint span {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #e2e8f0;
+    .toolbar-left .hint .dot {
+      display: inline-block; width: 8px; height: 8px; border-radius: 50%;
     }
+    .toolbar-left .hint .dot.green { background: #4CAF50; }
+    .toolbar-left .hint .dot.gray { background: #cbd5e0; }
 
     .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 16px;
-      border: none;
-      border-radius: 8px;
-      font-family: inherit;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s;
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 18px; border: none; border-radius: 8px;
+      font-family: inherit; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: all 0.15s;
     }
     .btn:hover { transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-
-    .btn-primary  { background: #4f46e5; color: #fff; }
-    .btn-success  { background: #059669; color: #fff; }
+    .btn-primary  { background: #004F6E; color: #fff; }
+    .btn-success  { background: #4CAF50; color: #fff; }
     .btn-outline  { background: #fff; color: #4a5568; border: 1.5px solid #e2e8f0; }
     .btn-outline:hover { border-color: #a0aec0; }
-    .btn-danger   { background: #fee2e2; color: #b91c1c; }
-    .btn-danger:hover { background: #fca5a5; }
+    .btn-danger   { background: #fee2e2; color: #C62828; }
+    .btn:disabled { opacity: 0.4; cursor: default; pointer-events: none; }
 
-    .btn-sm { padding: 5px 10px; font-size: 11px; border-radius: 6px; }
+    .counter {
+      font-size: 13px; font-weight: 700; color: #004F6E;
+      background: #e8f4f8; padding: 5px 12px; border-radius: 8px;
+    }
 
-    .btn:disabled { opacity: 0.4; cursor: default; pointer-events: none; transform: none; box-shadow: none; }
-
-    /* ── HEADER ── */
-    .header { text-align: center; margin-bottom: 28px; }
-
+    /* -- HEADER -- */
+    .header { text-align: center; margin-top: 28px; margin-bottom: 32px; }
     .header h1 {
-      font-size: 32px;
-      font-weight: 800;
-      color: #1a202c;
-      margin-bottom: 6px;
-      letter-spacing: -0.5px;
-      outline: none;
+      font-size: 32px; font-weight: 800; color: #002938;
+      margin-bottom: 6px; letter-spacing: -0.5px;
     }
-
     .header p {
-      font-size: 15px;
-      color: #718096;
-      font-weight: 500;
-      outline: none;
+      font-size: 15px; color: #718096; font-weight: 500;
+      max-width: 680px; margin: 0 auto; line-height: 1.6;
     }
 
-    .header [contenteditable="true"]:hover { background: #f7fafc; border-radius: 6px; }
-    .header [contenteditable="true"]:focus { background: #edf2f7; border-radius: 6px; }
+    /* ====== SELECTOR VIEW ====== */
+    #selector-view {}
 
-    /* ── TABLE ── */
+    .section-group {
+      background: #fff; border-radius: 14px;
+      box-shadow: 0 3px 16px rgba(0,0,0,0.06);
+      margin-bottom: 16px; overflow: hidden;
+    }
+    .section-header {
+      padding: 14px 20px; display: flex; align-items: center;
+      justify-content: space-between; cursor: pointer;
+      user-select: none; transition: background 0.15s;
+    }
+    .section-header:hover { background: #f7fafc; }
+    .section-header h3 {
+      font-size: 14px; font-weight: 700; color: #002938;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-header .section-count {
+      font-size: 11px; font-weight: 600; color: #718096;
+      background: #edf2f7; padding: 2px 8px; border-radius: 10px;
+    }
+    .section-header .toggle-all {
+      font-size: 12px; font-weight: 600; color: #004F6E;
+      cursor: pointer; padding: 4px 10px; border-radius: 6px;
+      border: 1.5px solid rgba(0,79,110,0.2); background: #fff;
+      transition: all 0.15s;
+    }
+    .section-header .toggle-all:hover { background: #e8f4f8; }
+
+    .feature-list {
+      padding: 0 20px 16px; display: grid;
+      grid-template-columns: 1fr 1fr 1fr; gap: 6px;
+    }
+    @media (max-width: 900px) { .feature-list { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 600px) { .feature-list { grid-template-columns: 1fr; } }
+
+    .feature-option {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px; border-radius: 10px; cursor: pointer;
+      border: 2px solid #e2e8f0; transition: all 0.15s;
+      user-select: none;
+    }
+    .feature-option:hover { border-color: #a0aec0; background: #f7fafc; }
+    .feature-option.selected {
+      border-color: #004F6E; background: #e8f4f8;
+    }
+    .feature-option .cb {
+      width: 20px; height: 20px; border-radius: 6px;
+      border: 2px solid #cbd5e0; display: flex;
+      align-items: center; justify-content: center;
+      font-size: 12px; color: transparent; transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .feature-option.selected .cb {
+      background: #004F6E; border-color: #004F6E; color: #fff;
+    }
+    .feature-option .f-name {
+      font-size: 13px; font-weight: 500; color: #2d3748; line-height: 1.3;
+    }
+
+    /* -- QUICK ACTIONS -- */
+    .quick-actions {
+      display: flex; gap: 8px; flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .quick-btn {
+      padding: 6px 14px; border-radius: 20px; font-size: 12px;
+      font-weight: 600; border: 1.5px solid #e2e8f0; background: #fff;
+      color: #4a5568; cursor: pointer; transition: all 0.15s;
+    }
+    .quick-btn:hover { border-color: #004F6E; color: #004F6E; background: #e8f4f8; }
+
+    /* ====== RESULTS VIEW ====== */
+    #results-view { display: none; }
+
+    .results-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 10px; margin-bottom: 20px; padding: 16px 20px;
+      background: #fff; border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .results-bar .info {
+      font-size: 14px; font-weight: 600; color: #2d3748;
+    }
+    .results-bar .info span { color: #004F6E; }
+
+    /* -- TABLE -- */
     .table-wrapper {
-      background: #fff;
-      border-radius: 16px;
+      background: #fff; border-radius: 16px;
       box-shadow: 0 4px 24px rgba(0,0,0,0.07);
-      overflow-x: auto;
-      margin-bottom: 24px;
+      overflow-x: auto; margin-bottom: 24px;
     }
-
-    table { width: 100%; border-collapse: collapse; min-width: 940px; }
-
+    table { width: 100%; border-collapse: collapse; min-width: 860px; }
     col.feature { width: 26%; }
     col.vendor  { width: 18.5%; }
 
-    /* Vendor headers */
     thead th {
-      padding: 18px 12px;
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: 0.3px;
-      text-align: center;
-      color: #fff;
-      position: sticky;
-      top: 0;
-      z-index: 2;
-      outline: none;
+      padding: 16px 12px; font-size: 14px; font-weight: 700;
+      letter-spacing: 0.3px; text-align: center;
+      color: #fff; position: sticky; top: 0; z-index: 2;
     }
-    thead th[contenteditable="true"]:focus { text-decoration: underline; }
-
     thead th:first-child {
-      background: #fff;
-      color: #1a202c;
-      text-align: left;
-      padding-left: 24px;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      font-weight: 600;
+      background: #fff; color: #002938; text-align: left;
+      padding-left: 24px; font-size: 12px; text-transform: uppercase;
+      letter-spacing: 1.2px; font-weight: 600;
     }
+    thead th:nth-child(2) { background: #C62828; }
+    thead th:nth-child(3) { background: #64BBDE; }
+    thead th:nth-child(4) { background: #4CAF50; }
+    thead th:nth-child(5) { background: #F2B233; }
 
-    thead th:nth-child(2) { background: #e74c3c; }
-    thead th:nth-child(3) { background: #3498db; }
-    thead th:nth-child(4) { background: #2ecc71; }
-    thead th:nth-child(5) { background: #f39c12; }
-
-    /* Section rows */
     .section-row td {
-      background: #edf2f7;
-      padding: 10px 24px;
-      font-weight: 700;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #4a5568;
+      background: #edf2f7; padding: 10px 24px;
+      font-weight: 700; font-size: 12px; text-transform: uppercase;
+      letter-spacing: 1px; color: #4a5568;
       border-bottom: 1px solid #e2e8f0;
     }
-    .section-row td:first-child { outline: none; }
-    .section-row td:first-child:hover { background: #e2e8f0; cursor: text; }
 
-    .section-row .section-actions {
-      display: inline-flex;
-      gap: 4px;
-      margin-left: 12px;
-      vertical-align: middle;
-    }
-
-    /* Data cells */
     tbody td {
-      padding: 10px 12px;
-      font-size: 13px;
-      text-align: center;
-      border-bottom: 1px solid #edf2f7;
-      vertical-align: middle;
-      transition: background 0.15s;
+      padding: 10px 12px; font-size: 13px; text-align: center;
+      border-bottom: 1px solid #edf2f7; vertical-align: middle;
     }
-
     tbody tr:hover td { background: #f7fafc; }
     tbody tr.alt td { background: #fafbfc; }
     tbody tr.alt:hover td { background: #f0f4f8; }
-
     tbody td:first-child {
-      text-align: left;
-      padding-left: 24px;
-      font-weight: 500;
-      color: #2d3748;
+      text-align: left; padding-left: 24px;
+      font-weight: 500; color: #2d3748;
     }
-
-    /* Feature name cell */
-    .feature-name {
-      outline: none;
-      display: inline;
-    }
-    .feature-name:hover { background: #edf2f7; border-radius: 4px; padding: 1px 3px; }
-
-    /* Row actions */
-    .row-actions {
-      display: inline-flex;
-      gap: 2px;
-      margin-left: 6px;
-      vertical-align: middle;
-      opacity: 0;
-      transition: opacity 0.15s;
-    }
-    tr:hover .row-actions { opacity: 1; }
-
-    .row-action-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #a0aec0;
-      font-size: 14px;
-      padding: 2px 4px;
-      border-radius: 4px;
-      line-height: 1;
-    }
-    .row-action-btn:hover { color: #e53e3e; background: #fee2e2; }
-
-    /* Vendor cells */
-    .vendor-cell {
-      cursor: pointer;
-      user-select: none;
-      min-height: 36px;
-      position: relative;
-    }
-    .vendor-cell:hover { background: #f0f4f8; border-radius: 6px; }
 
     .check {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      font-size: 13px;
-      font-weight: 700;
-      transition: transform 0.15s;
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 24px; height: 24px; border-radius: 50%;
+      font-size: 13px; font-weight: 700;
     }
-    .check:hover { transform: scale(1.15); }
-
-    .check.canto       { background: #fde8e8; color: #e74c3c; }
-    .check.bynder      { background: #dbeafe; color: #3498db; }
-    .check.brandfolder { background: #d1fae5; color: #2ecc71; }
-    .check.openasset   { background: #fef3c7; color: #d97706; }
-
+    .check.canto       { background: #fde8e8; color: #C62828; }
+    .check.bynder      { background: #dbeafe; color: #64BBDE; }
+    .check.brandfolder { background: #d1fae5; color: #4CAF50; }
+    .check.openasset   { background: #fef3c7; color: #F2B233; }
     .dash { color: #cbd5e0; font-size: 18px; font-weight: 300; }
-
     .detail {
-      font-size: 11px;
-      color: #718096;
-      margin-top: 2px;
-      line-height: 1.3;
-      outline: none;
-      min-height: 14px;
-    }
-    .detail:hover { background: #f7fafc; border-radius: 3px; }
-    .detail:focus { background: #edf2f7; border-radius: 3px; }
-    .detail:empty::before {
-      content: 'Add note...';
-      color: #cbd5e0;
-      font-style: italic;
+      font-size: 11px; color: #718096; margin-top: 2px;
+      line-height: 1.3; min-height: 14px;
     }
 
-    .cell-text {
-      font-size: 12.5px;
-      font-weight: 600;
-      color: #2d3748;
-      line-height: 1.3;
-      outline: none;
+    /* -- SCORE CARDS -- */
+    .score-cards {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 16px; margin-bottom: 24px;
     }
+    @media (max-width: 800px) { .score-cards { grid-template-columns: 1fr 1fr; } }
 
-    .badge {
-      display: inline-block;
-      padding: 2px 7px;
-      border-radius: 6px;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
+    .score-card {
+      background: #fff; border-radius: 14px; padding: 20px;
+      box-shadow: 0 3px 16px rgba(0,0,0,0.06);
+      text-align: center; border-top: 4px solid;
     }
-    .badge.aec { background: #ede9fe; color: #5b21b6; }
+    .score-card.canto       { border-color: #C62828; }
+    .score-card.bynder      { border-color: #64BBDE; }
+    .score-card.brandfolder { border-color: #4CAF50; }
+    .score-card.openasset   { border-color: #F2B233; }
+
+    .score-card h4 {
+      font-size: 14px; font-weight: 700; color: #002938;
+      margin-bottom: 8px;
+    }
+    .score-val {
+      font-size: 36px; font-weight: 800; letter-spacing: -1px;
+      line-height: 1;
+    }
+    .score-card.canto .score-val       { color: #C62828; }
+    .score-card.bynder .score-val      { color: #64BBDE; }
+    .score-card.brandfolder .score-val { color: #4CAF50; }
+    .score-card.openasset .score-val   { color: #F2B233; }
+
+    .score-label {
+      font-size: 12px; color: #718096; font-weight: 600; margin-top: 4px;
+    }
+    .score-bar-wrap {
+      margin-top: 10px; background: #edf2f7; border-radius: 6px;
+      height: 8px; overflow: hidden;
+    }
+    .score-bar-fill { height: 100%; border-radius: 6px; transition: width 0.6s ease; }
+    .score-card.canto .score-bar-fill       { background: #C62828; }
+    .score-card.bynder .score-bar-fill      { background: #64BBDE; }
+    .score-card.brandfolder .score-bar-fill { background: #4CAF50; }
+    .score-card.openasset .score-bar-fill   { background: #F2B233; }
 
     .footnote {
-      text-align: center;
-      font-size: 12px;
-      color: #a0aec0;
+      text-align: center; font-size: 12px; color: #a0aec0;
       padding: 16px 0 0;
-      outline: none;
     }
 
-    /* ── TOAST ── */
+    /* -- TOAST -- */
     .toast {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
+      position: fixed; bottom: 24px; left: 50%;
       transform: translateX(-50%) translateY(80px);
-      background: #1a202c;
-      color: #fff;
-      padding: 10px 22px;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: 500;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-      z-index: 999;
-      opacity: 0;
-      transition: all 0.3s ease;
-      pointer-events: none;
+      background: #002938; color: #fff; padding: 10px 22px;
+      border-radius: 10px; font-size: 13px; font-weight: 500;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2); z-index: 999;
+      opacity: 0; transition: all 0.3s ease; pointer-events: none;
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    /* ── NAV ── */
-    .nav {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      margin-bottom: 16px;
-      padding: 12px 20px;
-      background: #1a202c;
-      border-radius: 12px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
-    }
-    .nav a {
-      color: #a0aec0;
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 600;
-      padding: 6px 14px;
-      border-radius: 8px;
-      transition: all 0.15s;
-    }
-    .nav a:hover { color: #fff; background: rgba(255,255,255,0.08); }
-    .nav a.active { color: #fff; background: #4f46e5; }
-
-    /* ── LOCK MODE ── */
-    .btn-lock { background: #f59e0b; color: #fff; }
-    .btn-lock:hover { background: #d97706; }
-    .btn-lock.unlocked { background: #10b981; }
-    .btn-lock.unlocked:hover { background: #059669; }
-
-    body.locked .edit-only { display: none !important; }
-    body.locked .vendor-cell { cursor: default; }
-    body.locked .vendor-cell:hover { background: transparent; border-radius: 0; }
-    body.locked .check:hover { transform: none; }
-    body.locked .feature-name:hover { background: transparent; padding: 0; }
-    body.locked .detail:hover { background: transparent; }
-    body.locked .detail:empty::before { display: none; }
-    body.locked .section-row td:first-child:hover { background: #edf2f7; cursor: default; }
-    body.locked .header [contenteditable]:hover { background: transparent; }
-
-    /* ── PRINT / PDF ── */
+    /* -- PRINT -- */
     @media print {
-      body { background: #fff; padding: 10px; }
-      .toolbar, .nav, .row-actions, .section-actions, .edit-only, .btn-sm, .toast { display: none !important; }
+      body { background: #fff; padding: 10px; padding-top: 0; }
+      .toolbar, .top-nav, .results-bar, #selector-view, .score-cards { display: none !important; }
+      #results-view { display: block !important; }
       .table-wrapper { box-shadow: none; border: 1px solid #e2e8f0; }
       thead th { position: static; }
-      .vendor-cell { cursor: default; }
-      .detail:empty::before { display: none; }
-      .feature-name:hover, .detail:hover { background: none; }
     }
   </style>
 </head>
@@ -361,288 +315,383 @@
 
 <div class="container">
 
-  <nav class="nav no-print">
+<div class="top-nav no-print">
+  <div class="site-links">
     <a href="index.html">Home</a>
     <a href="summary.html">Summary</a>
     <a href="capabilities.html" class="active">Capabilities</a>
     <a href="current-vs-dam.html">Current vs. DAM</a>
+    <a href="methods.html">DAM Methods</a>
     <a href="pricing.html">Pricing</a>
-  </nav>
+  </div>
+  <button class="nav-btn no-print" onclick="window.print()">Export PDF</button>
+</div>
 
-  <div class="toolbar no-print">
-    <div class="toolbar-left">
-      <div class="hint edit-only"><span></span> Click a cell to toggle check / dash</div>
-      <div class="hint edit-only"><span></span> Click any text to edit in place</div>
+  <!-- ═══════ SELECTOR VIEW ═══════ -->
+  <div id="selector-view">
+
+    <div class="header">
+      <h1>Build Your Comparison</h1>
+      <p>Select the capabilities that matter most to your team, then see how each platform stacks up. Focus on what's important to you, not a wall of 50+ features.</p>
     </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-      <button class="btn btn-lock" id="lock-btn" onclick="toggleLock()">&#128274; Unlock Editing</button>
-      <button class="btn btn-outline edit-only" onclick="addSection()">+ Section</button>
-      <button class="btn btn-outline edit-only" id="undo-btn" onclick="undo()" disabled>&#8617; Undo</button>
-      <button class="btn btn-primary edit-only" onclick="saveBaseline()">&#128190; Save as Baseline</button>
-      <button class="btn btn-outline edit-only" onclick="resetData()">&#8634; Reset</button>
-      <button class="btn btn-success" onclick="exportPDF()">Export PDF</button>
+
+    <div class="toolbar no-print">
+      <div class="toolbar-left">
+        <span class="counter" id="selected-count">0 selected</span>
+        <div class="hint"><span class="dot green"></span> Select features below, then compare</div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-outline" onclick="selectNone()">Clear All</button>
+        <button class="btn btn-outline" onclick="selectAll()">Select All</button>
+        <button class="btn btn-primary" id="compare-btn" onclick="showResults()" disabled>Compare Selected</button>
+      </div>
     </div>
+
+    <div class="quick-actions">
+      <button class="quick-btn" onclick="selectPreset('ai')">AI & Intelligence</button>
+      <button class="quick-btn" onclick="selectPreset('creative')">Creative & Templating</button>
+      <button class="quick-btn" onclick="selectPreset('integrations')">Integrations</button>
+      <button class="quick-btn" onclick="selectPreset('brand')">Brand Management</button>
+      <button class="quick-btn" onclick="selectPreset('collab')">Collaboration</button>
+      <button class="quick-btn" onclick="selectPreset('security')">Security & Support</button>
+      <button class="quick-btn" onclick="selectPreset('essentials')">Essentials (Top 15)</button>
+    </div>
+
+    <div id="feature-sections"></div>
+
   </div>
 
-  <div class="header">
-    <h1 contenteditable="true" spellcheck="false" id="title">DAM Platform Comparison</h1>
-    <p contenteditable="true" spellcheck="false" id="subtitle">Cummings Electrical | Capability Overview Across Four DAM Solutions</p>
+  <!-- ═══════ RESULTS VIEW ═══════ -->
+  <div id="results-view">
+
+    <div class="header">
+      <h1>Capability Comparison</h1>
+      <p>Showing the features you selected, scored across all four DAM platforms.</p>
+    </div>
+
+    <div class="results-bar no-print">
+      <div class="info">Comparing <span id="result-count">0</span> capabilities</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-outline" onclick="backToSelector()">Change Selection</button>
+        <button class="btn btn-outline" onclick="addMore()">+ Add More</button>
+        <button class="btn btn-success" onclick="window.print()">Export PDF</button>
+      </div>
+    </div>
+
+    <div class="score-cards" id="score-cards"></div>
+
+    <div class="table-wrapper">
+      <table id="comparison-table">
+        <colgroup>
+          <col class="feature">
+          <col class="vendor">
+          <col class="vendor">
+          <col class="vendor">
+          <col class="vendor">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Canto</th>
+            <th>Bynder</th>
+            <th>Brandfolder</th>
+            <th>OpenAsset</th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+
+    <p class="footnote">
+      Data sourced from vendor proposals, product websites &amp; documentation, February 2026 &bull; Cummings Electrical DAM Evaluation
+    </p>
+
   </div>
 
-  <div class="table-wrapper">
-    <table id="comparison-table">
-      <colgroup>
-        <col class="feature">
-        <col class="vendor">
-        <col class="vendor">
-        <col class="vendor">
-        <col class="vendor">
-      </colgroup>
-      <thead>
-        <tr>
-          <th>Feature</th>
-          <th contenteditable="true" spellcheck="false">Canto</th>
-          <th contenteditable="true" spellcheck="false">Bynder</th>
-          <th contenteditable="true" spellcheck="false">Brandfolder</th>
-          <th contenteditable="true" spellcheck="false">OpenAsset</th>
-        </tr>
-      </thead>
-      <tbody id="table-body"></tbody>
-    </table>
-  </div>
-
-  <p class="footnote" contenteditable="true" spellcheck="false">
-    Data sourced from vendor proposals, product websites &amp; markdown crawls, February 2026 &bull; Cummings Electrical DAM Evaluation
-  </p>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
 const VENDORS = ['canto','bynder','brandfolder','openasset'];
+const VENDOR_LABELS = { canto: 'Canto', bynder: 'Bynder', brandfolder: 'Brandfolder', openasset: 'OpenAsset' };
 
-const DEFAULT_DATA = [
-  { section: "AI & Intelligence", rows: [
-    { feature: "AI Auto-Tagging (Images)", canto: { on: true, detail: "Unlimited" }, bynder: { on: true, detail: "Auto-tagging at upload" }, brandfolder: { on: true, detail: "Adapts to user habits" }, openasset: { on: true, detail: "AI-powered workflows" } },
+const DATA = [
+  { section: "AI & Intelligence", key: "ai", rows: [
+    { feature: "AI Auto-Tagging (Images)", essential: true, canto: { on: true, detail: "Unlimited" }, bynder: { on: true, detail: "Auto-tagging at upload" }, brandfolder: { on: true, detail: "Adapts to user habits" }, openasset: { on: true, detail: "AI-powered workflows" } },
     { feature: "AI Auto-Tagging (Video)", canto: { on: true, detail: "Smart Tags + timestamp" }, bynder: { on: true, detail: "" }, brandfolder: { on: true, detail: "Scene detection + tags" }, openasset: { on: false, detail: "" } },
     { feature: "AI Facial Recognition", canto: { on: true, detail: "Images + Video" }, bynder: { on: true, detail: "Face detection" }, brandfolder: { on: true, detail: "AI Image Recognition" }, openasset: { on: true, detail: "Employee photo tagging" } },
     { feature: "AI OCR / Text Extraction", canto: { on: true, detail: "PDF, images, color detection" }, bynder: { on: true, detail: "Text-in-image search" }, brandfolder: { on: true, detail: "OCR + In-Doc Search" }, openasset: { on: false, detail: "" } },
-    { feature: "AI Visual / Similarity Search", canto: { on: true, detail: "Visual matching + metadata" }, bynder: { on: true, detail: "Similar image + search by image" }, brandfolder: { on: true, detail: "Similarity Engine" }, openasset: { on: false, detail: "" } },
+    { feature: "AI Visual / Similarity Search", essential: true, canto: { on: true, detail: "Visual matching + metadata" }, bynder: { on: true, detail: "Similar image + search by image" }, brandfolder: { on: true, detail: "Similarity Engine" }, openasset: { on: true, detail: "AEC-focused visual search" } },
     { feature: "AI Video Transcription / Speech-to-Text", canto: { on: true, detail: "Subtitles + multi-language" }, bynder: { on: true, detail: "" }, brandfolder: { on: true, detail: "Audio to metadata" }, openasset: { on: false, detail: "" } },
-    { feature: "Natural Language Search", canto: { on: false, detail: "" }, bynder: { on: true, detail: "Conversational queries" }, brandfolder: { on: false, detail: "" }, openasset: { on: false, detail: "" } },
-    { feature: "AI Duplicate Detection", canto: { on: false, detail: "" }, bynder: { on: true, detail: "Upload + manager" }, brandfolder: { on: true, detail: "On upload + library-wide" }, openasset: { on: false, detail: "" } },
-    { feature: "Suggested Tags & Descriptions", canto: { on: true, detail: "AI Library Assistant" }, bynder: { on: false, detail: "" }, brandfolder: { on: true, detail: "ML-driven suggestions" }, openasset: { on: false, detail: "" } },
+    { feature: "Natural Language Search", essential: true, canto: { on: true, detail: "AI Visual Search + conversational" }, bynder: { on: true, detail: "Conversational queries" }, brandfolder: { on: false, detail: "" }, openasset: { on: true, detail: "Project + keyword search" } },
+    { feature: "AI Duplicate Detection", canto: { on: false, detail: "" }, bynder: { on: true, detail: "Upload + manager" }, brandfolder: { on: true, detail: "On upload + library-wide" }, openasset: { on: true, detail: "Duplicate file detection" } },
+    { feature: "Suggested Tags & Descriptions", canto: { on: true, detail: "AI Library Assistant" }, bynder: { on: true, detail: "AI-driven tag suggestions" }, brandfolder: { on: true, detail: "ML-driven suggestions" }, openasset: { on: true, detail: "AEC-focused tag suggestions" } },
     { feature: "AI Agents / Custom AI", canto: { on: true, detail: "Canto XI platform" }, bynder: { on: true, detail: "Configurable AI Agents" }, brandfolder: { on: true, detail: "Custom ML Models" }, openasset: { on: true, detail: "Shred.ai: AI proposal writing" } },
     { feature: "AI Proposal / RFP Analysis", canto: { on: false, detail: "" }, bynder: { on: false, detail: "" }, brandfolder: { on: false, detail: "" }, openasset: { on: true, detail: "RFP analysis, compliance checks" } },
     { feature: "Multi-Language AI Translation", canto: { on: true, detail: "Transcripts + metadata" }, bynder: { on: false, detail: "" }, brandfolder: { on: true, detail: "24 languages" }, openasset: { on: false, detail: "" } },
   ]},
-  { section: "Templating & Creative Tools", rows: [
-    { feature: "Brand Templating", canto: { on: true, detail: "Brand Studio: import from InDesign, AI-powered templates" }, bynder: { on: true, detail: "Studio: images, videos, GIFs" }, brandfolder: { on: true, detail: "Content Automation: code, InDesign, drag-and-drop" }, openasset: { on: true, detail: "Resumes, project sheets, proposal templates" } },
+  { section: "Templating & Creative Tools", key: "creative", rows: [
+    { feature: "Brand Templating", essential: true, canto: { on: true, detail: "Brand Studio: import from InDesign, AI-powered templates" }, bynder: { on: true, detail: "Studio: images, videos, GIFs" }, brandfolder: { on: true, detail: "Content Automation: code, InDesign, drag-and-drop" }, openasset: { on: true, detail: "Resumes, project sheets, proposal templates" } },
     { feature: "Self-Service Template Editing", canto: { on: true, detail: "Locked zones + guided editing" }, bynder: { on: true, detail: "On-brand content creation" }, brandfolder: { on: true, detail: "Lockable elements + permissions" }, openasset: { on: true, detail: "Pre-designed templates" } },
     { feature: "AI-Powered Content Adaptation", canto: { on: true, detail: "Auto-resize, localize, crop" }, bynder: { on: true, detail: "Creative automation" }, brandfolder: { on: true, detail: "Bulk creation via CSV/data" }, openasset: { on: true, detail: "Shred.ai content generation" } },
     { feature: "Web-to-Print / Send to Print", canto: { on: false, detail: "" }, bynder: { on: false, detail: "" }, brandfolder: { on: true, detail: "Ciloo printer network" }, openasset: { on: false, detail: "" } },
     { feature: "Video Management & Editing", canto: { on: true, detail: "Jump to timestamp" }, bynder: { on: true, detail: "" }, brandfolder: { on: true, detail: "Clip, watermark, transcode" }, openasset: { on: false, detail: "" } },
     { feature: "Image Resize, Convert & Crop", canto: { on: true, detail: "" }, bynder: { on: true, detail: "Dynamic Asset Transformation" }, brandfolder: { on: true, detail: "Bulk + custom presets" }, openasset: { on: true, detail: "Search, store, resize in one" } },
   ]},
-  { section: "Adobe & Key Integrations", rows: [
-    { feature: "Adobe Creative Cloud Plugin", canto: { on: true, detail: "InDesign, Photoshop, Illustrator, Premiere, After Effects, Lightroom" }, bynder: { on: true, detail: "" }, brandfolder: { on: true, detail: "Photoshop, Illustrator, InDesign (Bi-directional sync)" }, openasset: { on: true, detail: "InDesign drag-and-drop" } },
-    { feature: "Microsoft Office Integration", canto: { on: true, detail: "Teams, PPT, Outlook, Word, Excel" }, bynder: { on: false, detail: "" }, brandfolder: { on: true, detail: "PowerPoint + Word" }, openasset: { on: false, detail: "" } },
-    { feature: "Figma Integration", canto: { on: true, detail: "" }, bynder: { on: false, detail: "" }, brandfolder: { on: true, detail: "" }, openasset: { on: false, detail: "" } },
-    { feature: "Canva Integration", canto: { on: true, detail: "" }, bynder: { on: false, detail: "" }, brandfolder: { on: true, detail: "" }, openasset: { on: false, detail: "" } },
-    { feature: "HubSpot Integration", canto: { on: true, detail: "" }, bynder: { on: false, detail: "" }, brandfolder: { on: true, detail: "" }, openasset: { on: true, detail: "HubSpot CRM" } },
-    { feature: "Salesforce Integration", canto: { on: true, detail: "Marketing Cloud" }, bynder: { on: true, detail: "Strategic partnership" }, brandfolder: { on: true, detail: "Salesforce + Marketing Cloud" }, openasset: { on: true, detail: "" } },
-    { feature: "Slack Integration", canto: { on: true, detail: "" }, bynder: { on: false, detail: "" }, brandfolder: { on: true, detail: "" }, openasset: { on: true, detail: "" } },
-    { feature: "Hootsuite / Social Media", canto: { on: true, detail: "FB, LinkedIn, Pinterest, X, YT" }, bynder: { on: false, detail: "" }, brandfolder: { on: true, detail: "" }, openasset: { on: false, detail: "" } },
-    { feature: "Cloud Storage Connectors", canto: { on: true, detail: "Drive, Dropbox, Box, SP, OneDrive" }, bynder: { on: false, detail: "" }, brandfolder: { on: true, detail: "Box, Dropbox, Google Apps" }, openasset: { on: true, detail: "Box, Dropbox" } },
+  { section: "Adobe & Key Integrations", key: "integrations", rows: [
+    { feature: "Adobe Creative Cloud Plugin", essential: true, canto: { on: true, detail: "InDesign, Photoshop, Illustrator, Premiere, After Effects, Lightroom" }, bynder: { on: true, detail: "" }, brandfolder: { on: true, detail: "Photoshop, Illustrator, InDesign (Bi-directional sync)" }, openasset: { on: true, detail: "InDesign only" } },
+    { feature: "Microsoft Office Integration", essential: true, canto: { on: true, detail: "Teams, PPT, Outlook, Word, Excel" }, bynder: { on: true, detail: "Office 365 connector" }, brandfolder: { on: true, detail: "PowerPoint + Word" }, openasset: { on: false, detail: "" } },
+    { feature: "Figma Integration", canto: { on: true, detail: "" }, bynder: { on: true, detail: "Figma plugin" }, brandfolder: { on: true, detail: "" }, openasset: { on: false, detail: "" } },
+    { feature: "Canva Integration", canto: { on: true, detail: "" }, bynder: { on: true, detail: "Canva connector" }, brandfolder: { on: true, detail: "" }, openasset: { on: false, detail: "" } },
+    { feature: "HubSpot Integration", canto: { on: true, detail: "" }, bynder: { on: true, detail: "Via marketplace" }, brandfolder: { on: true, detail: "" }, openasset: { on: true, detail: "HubSpot CRM (API)" } },
+    { feature: "Salesforce Integration", canto: { on: true, detail: "Marketing Cloud" }, bynder: { on: true, detail: "Strategic partnership" }, brandfolder: { on: true, detail: "Salesforce + Marketing Cloud" }, openasset: { on: true, detail: "Via API" } },
+    { feature: "Slack Integration", canto: { on: true, detail: "" }, bynder: { on: true, detail: "Slack app" }, brandfolder: { on: true, detail: "" }, openasset: { on: true, detail: "" } },
+    { feature: "Hootsuite / Social Media", canto: { on: true, detail: "FB, LinkedIn, Pinterest, X, YT" }, bynder: { on: true, detail: "Social media publishing" }, brandfolder: { on: true, detail: "" }, openasset: { on: false, detail: "" } },
+    { feature: "Cloud Storage Connectors", canto: { on: true, detail: "Drive, Dropbox, Box, SP, OneDrive" }, bynder: { on: true, detail: "Drive, Dropbox, Box, OneDrive" }, brandfolder: { on: true, detail: "Box, Dropbox, Google Apps" }, openasset: { on: true, detail: "Box, Dropbox" } },
     { feature: "AEC-Specific Integrations", canto: { on: false, detail: "" }, bynder: { on: false, detail: "" }, brandfolder: { on: false, detail: "" }, openasset: { on: true, detail: "Deltek, Unanet, Procore, WordPress" } },
-    { feature: "Zapier / No-Code Automation", canto: { on: true, detail: "" }, bynder: { on: false, detail: "" }, brandfolder: { on: true, detail: "" }, openasset: { on: false, detail: "" } },
-    { feature: "API Access", canto: { on: true, detail: "RESTful API" }, bynder: { on: true, detail: "SDKs + developer toolkit" }, brandfolder: { on: true, detail: "Open API + 40+ integrations" }, openasset: { on: true, detail: "REST API" } },
-    { feature: "SSO / SAML", canto: { on: true, detail: "" }, bynder: { on: true, detail: "" }, brandfolder: { on: true, detail: "" }, openasset: { on: true, detail: "Azure AD, Okta, Ping" } },
+    { feature: "Zapier / No-Code Automation", canto: { on: true, detail: "" }, bynder: { on: true, detail: "Zapier + Workato" }, brandfolder: { on: true, detail: "" }, openasset: { on: false, detail: "" } },
+    { feature: "API Access", essential: true, canto: { on: true, detail: "RESTful API" }, bynder: { on: true, detail: "SDKs + developer toolkit" }, brandfolder: { on: true, detail: "Open API + 40+ integrations" }, openasset: { on: true, detail: "REST API" } },
+    { feature: "SSO / SAML", essential: true, canto: { on: true, detail: "" }, bynder: { on: true, detail: "" }, brandfolder: { on: true, detail: "" }, openasset: { on: true, detail: "Azure AD, Okta, Ping" } },
     { feature: "Total Integrations Ecosystem", canto: { on: true, detail: "45+" }, bynder: { on: true, detail: "155+" }, brandfolder: { on: true, detail: "40+" }, openasset: { on: true, detail: "15+ AEC-focused" } },
   ]},
-  { section: "Organization & Brand Management", rows: [
-    { feature: "Portals / Curated Experiences", canto: { on: true, detail: "Unlimited portals" }, bynder: { on: true, detail: "Homepage + CX User Community" }, brandfolder: { on: true, detail: "Brand Portals" }, openasset: { on: false, detail: "" } },
-    { feature: "Brand Guidelines / Style Guides", canto: { on: true, detail: "Unlimited Style Guides" }, bynder: { on: true, detail: "Brand Guidelines module" }, brandfolder: { on: true, detail: "Brandguide, auto-updated" }, openasset: { on: false, detail: "" } },
+  { section: "Organization & Brand Management", key: "brand", rows: [
+    { feature: "Portals / Curated Experiences", essential: true, canto: { on: true, detail: "Unlimited portals" }, bynder: { on: true, detail: "Homepage + CX User Community" }, brandfolder: { on: true, detail: "Brand Portals" }, openasset: { on: false, detail: "" } },
+    { feature: "Brand Guidelines / Style Guides", essential: true, canto: { on: true, detail: "Unlimited Style Guides" }, bynder: { on: true, detail: "Brand Guidelines module" }, brandfolder: { on: true, detail: "Brandguide, auto-updated" }, openasset: { on: false, detail: "" } },
     { feature: "Workspaces (In-Progress Content)", canto: { on: true, detail: "Unlimited" }, bynder: { on: false, detail: "" }, brandfolder: { on: true, detail: "Smartsheet-powered" }, openasset: { on: false, detail: "" } },
     { feature: "Collections / Albums", canto: { on: true, detail: "" }, bynder: { on: true, detail: "Unlimited" }, brandfolder: { on: true, detail: "" }, openasset: { on: true, detail: "Project-based organization" } },
-    { feature: "Custom Metadata / Fields", canto: { on: true, detail: "" }, bynder: { on: true, detail: "Full taxonomy management" }, brandfolder: { on: true, detail: "Controlled Custom Fields" }, openasset: { on: true, detail: "Project, employee, location tags" } },
-    { feature: "Version History / Control", canto: { on: true, detail: "" }, bynder: { on: true, detail: "" }, brandfolder: { on: true, detail: "" }, openasset: { on: true, detail: "" } },
+    { feature: "Custom Metadata / Fields", essential: true, canto: { on: true, detail: "" }, bynder: { on: true, detail: "Full taxonomy management" }, brandfolder: { on: true, detail: "Controlled Custom Fields" }, openasset: { on: true, detail: "Project, employee, location tags" } },
+    { feature: "Version History / Control", essential: true, canto: { on: true, detail: "" }, bynder: { on: true, detail: "" }, brandfolder: { on: true, detail: "" }, openasset: { on: true, detail: "" } },
     { feature: "Employee Profiles / CRM Database", canto: { on: false, detail: "" }, bynder: { on: false, detail: "" }, brandfolder: { on: false, detail: "" }, openasset: { on: true, detail: "Certs, skills, project history" } },
     { feature: "Text Library / Reusable Content", canto: { on: false, detail: "" }, bynder: { on: false, detail: "" }, brandfolder: { on: false, detail: "" }, openasset: { on: true, detail: "Bios, descriptions, boilerplate" } },
     { feature: "Asset Automation Engine", canto: { on: false, detail: "" }, bynder: { on: false, detail: "" }, brandfolder: { on: true, detail: "If/then rules, auto-organize" }, openasset: { on: false, detail: "" } },
     { feature: "Rights Management / Expiration", canto: { on: false, detail: "" }, bynder: { on: true, detail: "Asset quarantine controls" }, brandfolder: { on: true, detail: "Publish/expire dates, watermarks" }, openasset: { on: false, detail: "" } },
   ]},
-  { section: "Collaboration & Workflow", rows: [
-    { feature: "Asset Workflows & Approvals", canto: { on: true, detail: "Approval Hub, visual diff" }, bynder: { on: true, detail: "Asset Workflow + Content Workflow" }, brandfolder: { on: true, detail: "Multi-tier approval" }, openasset: { on: false, detail: "" } },
+  { section: "Collaboration & Workflow", key: "collab", rows: [
+    { feature: "Asset Workflows & Approvals", essential: true, canto: { on: true, detail: "Approval Hub, visual diff" }, bynder: { on: true, detail: "Asset Workflow + Content Workflow" }, brandfolder: { on: true, detail: "Multi-tier approval" }, openasset: { on: false, detail: "" } },
     { feature: "Comments & Annotations", canto: { on: false, detail: "" }, bynder: { on: true, detail: "Versioning + annotations" }, brandfolder: { on: true, detail: "Pinned annotations + timeline" }, openasset: { on: false, detail: "" } },
     { feature: "External Upload / Guest Upload", canto: { on: true, detail: "Upload Links, unlimited" }, bynder: { on: true, detail: "External Uploader" }, brandfolder: { on: true, detail: "Guest Upload Tool" }, openasset: { on: false, detail: "" } },
-    { feature: "Share Links", canto: { on: true, detail: "Unlimited" }, bynder: { on: true, detail: "" }, brandfolder: { on: true, detail: "Private, view-only, expiring" }, openasset: { on: true, detail: "Secure file sharing" } },
+    { feature: "Share Links", essential: true, canto: { on: true, detail: "Unlimited" }, bynder: { on: true, detail: "" }, brandfolder: { on: true, detail: "Private, view-only, expiring" }, openasset: { on: true, detail: "Secure file sharing" } },
     { feature: "CDN / Smart Asset Delivery", canto: { on: false, detail: "" }, bynder: { on: true, detail: "CloudFront CDN" }, brandfolder: { on: true, detail: "Smart CDN: embed + transform" }, openasset: { on: false, detail: "" } },
     { feature: "Proposal Document Creation", canto: { on: false, detail: "" }, bynder: { on: false, detail: "" }, brandfolder: { on: false, detail: "" }, openasset: { on: true, detail: "Resumes, project sheets, proposals" } },
   ]},
-  { section: "Analytics, Security & Support", rows: [
+  { section: "Analytics, Security & Support", key: "security", rows: [
     { feature: "Analytics / Insights Dashboard", canto: { on: false, detail: "" }, bynder: { on: true, detail: "Full Analytics module" }, brandfolder: { on: true, detail: "Insights + BI Data Connector" }, openasset: { on: false, detail: "" } },
-    { feature: "Security Certifications", canto: { on: true, detail: "ISO certified" }, bynder: { on: true, detail: "ISO 27001, SOC 2 Type II, HIPAA, GDPR, CCPA" }, brandfolder: { on: true, detail: "SOC2 Type 2, encryption, 24/7 antivirus" }, openasset: { on: true, detail: "Enterprise-grade security" } },
+    { feature: "Security Certifications", essential: true, canto: { on: true, detail: "ISO certified" }, bynder: { on: true, detail: "ISO 27001, SOC 2 Type II, HIPAA, GDPR, CCPA" }, brandfolder: { on: true, detail: "SOC2 Type 2, encryption, 24/7 antivirus" }, openasset: { on: true, detail: "Enterprise-grade security" } },
     { feature: "Mobile App", canto: { on: true, detail: "iOS + Mac/Windows desktop" }, bynder: { on: true, detail: "" }, brandfolder: { on: false, detail: "" }, openasset: { on: false, detail: "" } },
-    { feature: "Dedicated CSM / Support", canto: { on: true, detail: "Dedicated CSM" }, bynder: { on: true, detail: "24/7 · 8 levels · 4 languages" }, brandfolder: { on: true, detail: "Live chat + account manager" }, openasset: { on: true, detail: "G2 Best Support 2026" } },
+    { feature: "Dedicated CSM / Support", canto: { on: true, detail: "Dedicated CSM" }, bynder: { on: true, detail: "24/7, 8 levels, 4 languages" }, brandfolder: { on: true, detail: "Live chat + account manager" }, openasset: { on: true, detail: "G2 Best Support 2026" } },
   ]},
-  { section: "Industry Focus & Market Position", rows: [
+  { section: "Industry Focus & Market Position", key: "market", rows: [
     { feature: "Target Market", canto: { on: true, detail: "General enterprise, all industries" }, bynder: { on: true, detail: "General enterprise, 4,000+ global customers" }, brandfolder: { on: true, detail: "General enterprise, Smartsheet ecosystem" }, openasset: { on: true, detail: "AEC-Specific: Architecture, Engineering, Construction" } },
-    { feature: "Analyst Recognition", canto: { on: true, detail: "ISO certified · DAM industry leader" }, bynder: { on: true, detail: "Forrester, Gartner MQ, IDC" }, brandfolder: { on: true, detail: "Smartsheet-backed" }, openasset: { on: true, detail: "G2 Leader 2026 · 4.7 stars" } },
+    { feature: "Analyst Recognition", canto: { on: true, detail: "ISO certified, DAM industry leader" }, bynder: { on: true, detail: "Forrester, Gartner MQ, IDC" }, brandfolder: { on: true, detail: "Smartsheet-backed" }, openasset: { on: true, detail: "G2 Leader 2026, 4.7 stars" } },
   ]},
 ];
 
-/* ── State ── */
-let data = JSON.parse(JSON.stringify(DEFAULT_DATA));
-let locked = true;
-const undoStack = [];
-const MAX_UNDO = 10;
+/* Build a flat index for quick lookups: featureKey -> { sectionIdx, rowIdx } */
+const featureIndex = {};
+DATA.forEach((sec, si) => {
+  sec.rows.forEach((row, ri) => {
+    const key = si + '-' + ri;
+    featureIndex[key] = { si, ri, feature: row.feature, section: sec.section };
+  });
+});
 
-function clone(obj) { return JSON.parse(JSON.stringify(obj)); }
+/* Selection state: Set of "si-ri" keys */
+const selected = new Set();
 
-/* ── Lock / Unlock ── */
+/* ── Render selector ── */
+function renderSelector() {
+  const container = document.getElementById('feature-sections');
+  container.innerHTML = '';
 
-function toggleLock() {
-  if (!locked) {
-    syncTextFromDOM();
-    persistData();
-  }
-  locked = !locked;
-  applyLockState();
-  render();
-  toast(locked ? 'Editing locked' : 'Editing unlocked');
+  DATA.forEach((section, si) => {
+    const group = document.createElement('div');
+    group.className = 'section-group';
+
+    const selInSection = section.rows.filter((_, ri) => selected.has(si + '-' + ri)).length;
+
+    group.innerHTML =
+      '<div class="section-header" onclick="event.stopPropagation()">' +
+        '<h3>' + esc(section.section) +
+          ' <span class="section-count">' + selInSection + ' / ' + section.rows.length + '</span>' +
+        '</h3>' +
+        '<button class="toggle-all" onclick="toggleSection(' + si + ')">' +
+          (selInSection === section.rows.length ? 'Deselect All' : 'Select All') +
+        '</button>' +
+      '</div>' +
+      '<div class="feature-list"></div>';
+
+    const list = group.querySelector('.feature-list');
+    section.rows.forEach((row, ri) => {
+      const key = si + '-' + ri;
+      const isSelected = selected.has(key);
+      const opt = document.createElement('div');
+      opt.className = 'feature-option' + (isSelected ? ' selected' : '');
+      opt.onclick = () => toggleFeature(key);
+      opt.innerHTML =
+        '<div class="cb">' + (isSelected ? '&#10003;' : '') + '</div>' +
+        '<div class="f-name">' + esc(row.feature) + '</div>';
+      list.appendChild(opt);
+    });
+
+    container.appendChild(group);
+  });
+
+  updateCounter();
 }
 
-function applyLockState() {
-  document.body.classList.toggle('locked', locked);
-  const btn = document.getElementById('lock-btn');
-  if (!btn) return;
-  if (locked) {
-    btn.innerHTML = '&#128274; Unlock Editing';
-    btn.classList.remove('unlocked');
+function toggleFeature(key) {
+  if (selected.has(key)) selected.delete(key);
+  else selected.add(key);
+  renderSelector();
+}
+
+function toggleSection(si) {
+  const section = DATA[si];
+  const allSelected = section.rows.every((_, ri) => selected.has(si + '-' + ri));
+  section.rows.forEach((_, ri) => {
+    const key = si + '-' + ri;
+    if (allSelected) selected.delete(key);
+    else selected.add(key);
+  });
+  renderSelector();
+}
+
+function selectAll() {
+  DATA.forEach((sec, si) => sec.rows.forEach((_, ri) => selected.add(si + '-' + ri)));
+  renderSelector();
+}
+
+function selectNone() {
+  selected.clear();
+  renderSelector();
+}
+
+function selectPreset(preset) {
+  selected.clear();
+  if (preset === 'essentials') {
+    DATA.forEach((sec, si) => sec.rows.forEach((row, ri) => {
+      if (row.essential) selected.add(si + '-' + ri);
+    }));
   } else {
-    btn.innerHTML = '&#128275; Lock Editing';
-    btn.classList.add('unlocked');
+    DATA.forEach((sec, si) => {
+      if (sec.key === preset) sec.rows.forEach((_, ri) => selected.add(si + '-' + ri));
+    });
   }
+  renderSelector();
+  toast(selected.size + ' features selected');
 }
 
-/* Push a snapshot onto the undo stack BEFORE mutating data */
-function pushUndo() {
-  syncTextFromDOM();
-  undoStack.push(clone(data));
-  if (undoStack.length > MAX_UNDO) undoStack.shift();
-  updateUndoBtn();
+function updateCounter() {
+  const count = selected.size;
+  document.getElementById('selected-count').textContent = count + ' selected';
+  document.getElementById('compare-btn').disabled = count === 0;
 }
 
-function undo() {
-  if (undoStack.length === 0) return;
-  data = undoStack.pop();
-  persistData();
-  render();
-  updateUndoBtn();
-  toast('Undone');
+/* ── Show results ── */
+function showResults() {
+  if (selected.size === 0) return;
+  document.getElementById('selector-view').style.display = 'none';
+  document.getElementById('results-view').style.display = 'block';
+  document.getElementById('result-count').textContent = selected.size;
+  renderScoreCards();
+  renderTable();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function updateUndoBtn() {
-  const btn = document.getElementById('undo-btn');
-  if (!btn) return;
-  btn.disabled = undoStack.length === 0;
-  btn.textContent = undoStack.length > 0
-    ? '\u21A9 Undo (' + undoStack.length + ')'
-    : '\u21A9 Undo';
+function backToSelector() {
+  selected.clear();
+  document.getElementById('results-view').style.display = 'none';
+  document.getElementById('selector-view').style.display = 'block';
+  renderSelector();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-/* ── Persistence ── */
-
-function loadSaved() {
-  try {
-    if (!localStorage.getItem('dam-v3-clean')) {
-      localStorage.removeItem('dam-comparison-data');
-      localStorage.removeItem('dam-comparison-baseline');
-      localStorage.setItem('dam-v3-clean', '1');
-      return;
-    }
-    const saved = localStorage.getItem('dam-comparison-data');
-    if (saved) data = JSON.parse(saved);
-  } catch(e) {}
+function addMore() {
+  document.getElementById('results-view').style.display = 'none';
+  document.getElementById('selector-view').style.display = 'block';
+  renderSelector();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  toast('Add or remove features, then compare again');
 }
 
-function persistData() {
-  localStorage.setItem('dam-comparison-data', JSON.stringify(data));
-}
+/* ── Score cards ── */
+function renderScoreCards() {
+  const scores = {};
+  VENDORS.forEach(v => scores[v] = 0);
+  let total = 0;
 
-function syncTextFromDOM() {
-  const body = document.getElementById('table-body');
-  if (!body) return;
-  let sectionIdx = -1;
-  let rowIdx = -1;
+  selected.forEach(key => {
+    const info = featureIndex[key];
+    if (!info) return;
+    const row = DATA[info.si].rows[info.ri];
+    total++;
+    VENDORS.forEach(v => { if (row[v].on) scores[v]++; });
+  });
 
-  body.querySelectorAll('tr').forEach(tr => {
-    if (tr.classList.contains('section-row')) {
-      sectionIdx++;
-      rowIdx = -1;
-      const nameEl = tr.querySelector('.section-name');
-      if (nameEl && data[sectionIdx]) data[sectionIdx].section = nameEl.textContent.trim();
-    } else if (tr.dataset.row !== undefined) {
-      rowIdx++;
-      if (!data[sectionIdx] || !data[sectionIdx].rows[rowIdx]) return;
-      const row = data[sectionIdx].rows[rowIdx];
-      const nameEl = tr.querySelector('.feature-name');
-      if (nameEl) row.feature = nameEl.textContent.trim();
-      VENDORS.forEach(v => {
-        const detailEl = tr.querySelector('.detail[data-vendor="' + v + '"]');
-        if (detailEl) row[v].detail = detailEl.textContent.trim();
-      });
-    }
+  const container = document.getElementById('score-cards');
+  container.innerHTML = '';
+
+  VENDORS.forEach(v => {
+    const pct = total > 0 ? Math.round((scores[v] / total) * 100) : 0;
+    const card = document.createElement('div');
+    card.className = 'score-card ' + v;
+    card.innerHTML =
+      '<h4>' + VENDOR_LABELS[v] + '</h4>' +
+      '<div class="score-val">' + scores[v] + '/' + total + '</div>' +
+      '<div class="score-label">' + pct + '% match</div>' +
+      '<div class="score-bar-wrap"><div class="score-bar-fill" style="width:' + pct + '%"></div></div>';
+    container.appendChild(card);
   });
 }
 
-function onBlurSave() {
-  syncTextFromDOM();
-  persistData();
-}
-
-/* ── Render ── */
-
-function render() {
+/* ── Render table ── */
+function renderTable() {
   const body = document.getElementById('table-body');
   body.innerHTML = '';
-  const ce = locked ? 'false' : 'true';
 
-  data.forEach((section, si) => {
+  const grouped = {};
+  const sectionOrder = [];
+
+  selected.forEach(key => {
+    const info = featureIndex[key];
+    if (!info) return;
+    if (!grouped[info.si]) {
+      grouped[info.si] = [];
+      sectionOrder.push(info.si);
+    }
+    grouped[info.si].push(info.ri);
+  });
+
+  sectionOrder.sort((a, b) => a - b);
+
+  sectionOrder.forEach(si => {
+    const section = DATA[si];
+    const rows = grouped[si].sort((a, b) => a - b);
+
     const sectionTr = document.createElement('tr');
     sectionTr.className = 'section-row';
-    sectionTr.innerHTML =
-      '<td colspan="5">' +
-        '<span class="section-name" contenteditable="' + ce + '" spellcheck="false">' + esc(section.section) + '</span>' +
-        '<span class="section-actions no-print edit-only">' +
-          '<button class="btn btn-sm btn-outline" onclick="addRow(' + si + ')">+ Feature</button>' +
-          '<button class="btn btn-sm btn-danger" onclick="deleteSection(' + si + ')" title="Delete section">&times;</button>' +
-        '</span>' +
-      '</td>';
+    sectionTr.innerHTML = '<td colspan="5">' + esc(section.section) + '</td>';
     body.appendChild(sectionTr);
 
-    section.rows.forEach((row, ri) => {
+    rows.forEach((ri, idx) => {
+      const row = section.rows[ri];
       const tr = document.createElement('tr');
-      tr.className = ri % 2 === 1 ? 'alt' : '';
-      tr.dataset.row = ri;
+      tr.className = idx % 2 === 1 ? 'alt' : '';
 
-      let html = '<td>' +
-        '<span class="feature-name" contenteditable="' + ce + '" spellcheck="false">' + esc(row.feature) + '</span>' +
-        '<span class="row-actions no-print edit-only">' +
-          '<button class="row-action-btn" onclick="deleteRow(' + si + ',' + ri + ')" title="Delete">&times;</button>' +
-        '</span>' +
-      '</td>';
+      let html = '<td>' + esc(row.feature) + '</td>';
 
       VENDORS.forEach(v => {
         const cell = row[v];
-        html += '<td class="vendor-cell" onclick="toggleCheck(event,' + si + ',' + ri + ',\'' + v + '\')">';
+        html += '<td>';
         if (cell.on) {
           html += '<span class="check ' + v + '">&#10003;</span>';
         } else {
           html += '<span class="dash">\u2014</span>';
         }
-        html += '<div class="detail" data-vendor="' + v + '" contenteditable="' + ce + '" spellcheck="false" onclick="event.stopPropagation()">' + esc(cell.detail) + '</div>';
+        if (cell.detail) {
+          html += '<div class="detail">' + esc(cell.detail) + '</div>';
+        }
         html += '</td>';
       });
 
@@ -650,141 +699,13 @@ function render() {
       body.appendChild(tr);
     });
   });
-
-  updateHeaderEditable();
-  attachAutoSave();
-  updateUndoBtn();
-}
-
-function updateHeaderEditable() {
-  const ce = locked ? 'false' : 'true';
-  document.querySelectorAll('.header [contenteditable], thead th[contenteditable], .footnote[contenteditable]').forEach(el => {
-    el.setAttribute('contenteditable', ce);
-  });
-}
-
-function attachAutoSave() {
-  document.querySelectorAll('[contenteditable="true"]').forEach(el => {
-    el.removeEventListener('blur', onBlurSave);
-    el.addEventListener('blur', onBlurSave);
-    el.addEventListener('keydown', e => {
-      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); el.blur(); }
-    });
-  });
-}
-
-/* ── Actions (all push undo BEFORE mutating) ── */
-
-function toggleCheck(event, si, ri, vendor) {
-  if (locked) return;
-  if (event.target.closest('[contenteditable="true"]')) return;
-  pushUndo();
-  data[si].rows[ri][vendor].on = !data[si].rows[ri][vendor].on;
-  persistData();
-  render();
-  toast(data[si].rows[ri][vendor].on ? 'Checked' : 'Unchecked');
-}
-
-function addRow(sectionIdx) {
-  pushUndo();
-  const newRow = { feature: "New Feature" };
-  VENDORS.forEach(v => newRow[v] = { on: false, detail: "" });
-  data[sectionIdx].rows.push(newRow);
-  persistData();
-  render();
-  toast('Feature added');
-  setTimeout(() => {
-    const names = document.querySelectorAll('.feature-name');
-    const last = names[names.length - 1];
-    if (last) { last.focus(); selectAll(last); }
-  }, 50);
-}
-
-function deleteRow(si, ri) {
-  pushUndo();
-  const name = data[si].rows[ri].feature;
-  data[si].rows.splice(ri, 1);
-  persistData();
-  render();
-  toast('Removed "' + name + '" - click Undo to restore');
-}
-
-function addSection() {
-  pushUndo();
-  const newSection = { section: "New Section", rows: [] };
-  const newRow = { feature: "New Feature" };
-  VENDORS.forEach(v => newRow[v] = { on: false, detail: "" });
-  newSection.rows.push(newRow);
-  data.push(newSection);
-  persistData();
-  render();
-  toast('Section added');
-  setTimeout(() => {
-    const sections = document.querySelectorAll('.section-name');
-    const last = sections[sections.length - 1];
-    if (last) { last.focus(); selectAll(last); }
-  }, 50);
-}
-
-function deleteSection(si) {
-  pushUndo();
-  const name = data[si].section;
-  data.splice(si, 1);
-  persistData();
-  render();
-  toast('Removed "' + name + '" - click Undo to restore');
-}
-
-/* ── Baseline & Reset ── */
-
-function getBaseline() {
-  try {
-    const saved = localStorage.getItem('dam-comparison-baseline');
-    if (saved) return JSON.parse(saved);
-  } catch(e) {}
-  return clone(DEFAULT_DATA);
-}
-
-function resetData() {
-  const hasBaseline = localStorage.getItem('dam-comparison-baseline') !== null;
-  const label = hasBaseline ? 'saved baseline' : 'original defaults';
-  if (!confirm('Reset all data to the ' + label + '? Your current edits will be lost.')) return;
-  pushUndo();
-  data = getBaseline();
-  persistData();
-  render();
-  toast('Reset to ' + label);
-}
-
-function saveBaseline() {
-  syncTextFromDOM();
-  if (!confirm('Save current state as the new baseline? The Reset button will restore to this point.')) return;
-  localStorage.setItem('dam-comparison-baseline', JSON.stringify(data));
-  persistData();
-  toast('Baseline saved');
-}
-
-/* ── Export ── */
-
-function exportPDF() {
-  toast('Preparing PDF...');
-  setTimeout(() => window.print(), 300);
 }
 
 /* ── Utilities ── */
-
 function esc(str) {
   const d = document.createElement('div');
   d.textContent = str;
   return d.innerHTML;
-}
-
-function selectAll(el) {
-  const range = document.createRange();
-  range.selectNodeContents(el);
-  const sel = window.getSelection();
-  sel.removeAllRanges();
-  sel.addRange(range);
 }
 
 function toast(msg) {
@@ -795,18 +716,8 @@ function toast(msg) {
   el._t = setTimeout(() => el.classList.remove('show'), 2400);
 }
 
-/* Ctrl/Cmd+Z undo when NOT inside a text field */
-document.addEventListener('keydown', e => {
-  if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.target.closest('[contenteditable="true"]')) {
-    e.preventDefault();
-    undo();
-  }
-});
-
 /* ── Init ── */
-loadSaved();
-applyLockState();
-render();
+renderSelector();
 </script>
 
 </body>

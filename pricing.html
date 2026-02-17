@@ -5,137 +5,69 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cummings Electrical - DAM Pricing Comparison</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Roboto+Condensed:wght@400;700&display=swap');
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
       background: #f0f2f5;
       color: #2d3748;
-      padding: 40px 20px;
+      padding: 56px 20px 40px 20px;
     }
 
     .container { max-width: 1320px; margin: 0 auto; }
 
-    /* ── NAV ── */
-    .nav {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      margin-bottom: 16px;
-      padding: 12px 20px;
-      background: #1a202c;
-      border-radius: 12px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    /* -- NAV (top bar) -- */
+    .top-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 20px; background: rgba(0,41,56,0.95);
+      backdrop-filter: blur(8px); border-bottom: 1px solid rgba(255,255,255,0.08);
     }
-    .nav a {
-      color: #a0aec0;
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 600;
-      padding: 6px 14px;
-      border-radius: 8px;
-      transition: all 0.15s;
+    .top-nav .site-links {
+      display: flex; gap: 8px;
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
     }
-    .nav a:hover { color: #fff; background: rgba(255,255,255,0.08); }
-    .nav a.active { color: #fff; background: #4f46e5; }
-
-    /* ── TOOLBAR ── */
-    .toolbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 20px;
-      padding: 14px 20px;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    .top-nav .site-links::-webkit-scrollbar { display: none; }
+    .top-nav a {
+      color: #CCDCE2; text-decoration: none; font-size: 12px;
+      font-weight: 500; padding: 5px 12px; border-radius: 6px;
+      transition: all 0.15s; white-space: nowrap; flex-shrink: 0;
+      font-family: 'Roboto Condensed', 'Roboto', sans-serif;
     }
-
-    .toolbar-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-
-    .toolbar .hint {
-      font-size: 12px;
-      color: #a0aec0;
-      display: flex;
-      align-items: center;
-      gap: 5px;
+    .top-nav a:hover { color: #fff; background: rgba(255,255,255,0.1); }
+    .top-nav a.active { color: #fff; background: #004F6E; }
+    .top-nav .nav-btn {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 12px; border: none; border-radius: 6px;
+      font-family: 'Roboto Condensed', 'Roboto', sans-serif;
+      font-size: 11px; font-weight: 700; cursor: pointer;
+      background: #4CAF50; color: #fff; transition: all 0.15s;
+      white-space: nowrap; flex-shrink: 0; margin-left: 12px;
     }
-    .toolbar .hint span {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #e2e8f0;
-    }
+    .top-nav .nav-btn:hover { background: #388E3C; }
 
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 16px;
-      border: none;
-      border-radius: 8px;
-      font-family: inherit;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .btn:hover { transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-
-    .btn-primary  { background: #4f46e5; color: #fff; }
-    .btn-success  { background: #059669; color: #fff; }
-    .btn-outline  { background: #fff; color: #4a5568; border: 1.5px solid #e2e8f0; }
-    .btn-outline:hover { border-color: #a0aec0; }
-    .btn-danger   { background: #fee2e2; color: #b91c1c; }
-    .btn-danger:hover { background: #fca5a5; }
-
-    .btn-sm { padding: 5px 10px; font-size: 11px; border-radius: 6px; }
-
-    .btn:disabled { opacity: 0.4; cursor: default; pointer-events: none; transform: none; box-shadow: none; }
-
-    /* ── LOCK ── */
-    .btn-lock { background: #f59e0b; color: #fff; }
-    .btn-lock:hover { background: #d97706; }
-    .btn-lock.unlocked { background: #10b981; }
-    .btn-lock.unlocked:hover { background: #059669; }
-
-    body.locked .edit-only { display: none !important; }
-    body.locked .vendor-cell { cursor: default; }
-    body.locked .vendor-cell:hover { background: transparent; border-radius: 0; }
-    body.locked .feature-name:hover { background: transparent; padding: 0; }
-    body.locked .detail:hover { background: transparent; }
-    body.locked .detail:empty::before { display: none; }
-    body.locked .section-row td:first-child:hover { background: #edf2f7; cursor: default; }
-    body.locked .header [contenteditable]:hover { background: transparent; }
-
-    /* ── HEADER ── */
-    .header { text-align: center; margin-bottom: 28px; }
+    /* -- HEADER -- */
+    .header { text-align: center; margin-top: 28px; margin-bottom: 28px; }
 
     .header h1 {
+      font-family: 'Roboto Condensed', 'Roboto', sans-serif;
       font-size: 32px;
-      font-weight: 800;
-      color: #1a202c;
+      font-weight: 700;
+      color: #002938;
       margin-bottom: 6px;
       letter-spacing: -0.5px;
-      outline: none;
     }
 
     .header p {
       font-size: 15px;
-      color: #718096;
-      font-weight: 500;
-      outline: none;
+      color: #417B91;
+      font-weight: 400;
     }
 
-    .header [contenteditable="true"]:hover { background: #f7fafc; border-radius: 6px; }
-    .header [contenteditable="true"]:focus { background: #edf2f7; border-radius: 6px; }
-
-    /* ── TABLE ── */
+    /* -- TABLE -- */
     .table-wrapper {
       background: #fff;
       border-radius: 16px;
@@ -151,6 +83,7 @@
 
     thead th {
       padding: 18px 12px;
+      font-family: 'Roboto Condensed', 'Roboto', sans-serif;
       font-size: 14px;
       font-weight: 700;
       letter-spacing: 0.3px;
@@ -159,44 +92,34 @@
       position: sticky;
       top: 0;
       z-index: 2;
-      outline: none;
     }
-    thead th[contenteditable="true"]:focus { text-decoration: underline; }
 
     thead th:first-child {
       background: #fff;
-      color: #1a202c;
+      color: #002938;
       text-align: left;
       padding-left: 24px;
       font-size: 12px;
       text-transform: uppercase;
       letter-spacing: 1.2px;
-      font-weight: 600;
+      font-weight: 700;
     }
 
-    thead th:nth-child(2) { background: #e74c3c; }
-    thead th:nth-child(3) { background: #3498db; }
-    thead th:nth-child(4) { background: #2ecc71; }
-    thead th:nth-child(5) { background: #f39c12; }
+    thead th:nth-child(2) { background: #C62828; }
+    thead th:nth-child(3) { background: #64BBDE; }
+    thead th:nth-child(4) { background: #4CAF50; }
+    thead th:nth-child(5) { background: #F2B233; }
 
     .section-row td {
       background: #edf2f7;
       padding: 10px 24px;
+      font-family: 'Roboto Condensed', 'Roboto', sans-serif;
       font-weight: 700;
       font-size: 12px;
       text-transform: uppercase;
       letter-spacing: 1px;
-      color: #4a5568;
-      border-bottom: 1px solid #e2e8f0;
-    }
-    .section-row td:first-child { outline: none; }
-    .section-row td:first-child:hover { background: #e2e8f0; cursor: text; }
-
-    .section-row .section-actions {
-      display: inline-flex;
-      gap: 4px;
-      margin-left: 12px;
-      vertical-align: middle;
+      color: #004F6E;
+      border-bottom: 1px solid #CCDCE2;
     }
 
     tbody td {
@@ -205,7 +128,6 @@
       text-align: center;
       border-bottom: 1px solid #edf2f7;
       vertical-align: middle;
-      transition: background 0.15s;
     }
 
     tbody tr:hover td { background: #f7fafc; }
@@ -216,94 +138,39 @@
       text-align: left;
       padding-left: 24px;
       font-weight: 500;
-      color: #2d3748;
-    }
-
-    .feature-name {
-      outline: none;
-      display: inline;
-    }
-    .feature-name:hover { background: #edf2f7; border-radius: 4px; padding: 1px 3px; }
-
-    .row-actions {
-      display: inline-flex;
-      gap: 2px;
-      margin-left: 6px;
-      vertical-align: middle;
-      opacity: 0;
-      transition: opacity 0.15s;
-    }
-    tr:hover .row-actions { opacity: 1; }
-
-    .row-action-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #a0aec0;
-      font-size: 14px;
-      padding: 2px 4px;
-      border-radius: 4px;
-      line-height: 1;
-    }
-    .row-action-btn:hover { color: #e53e3e; background: #fee2e2; }
-
-    .vendor-cell {
-      cursor: default;
-      user-select: none;
-      min-height: 36px;
-      position: relative;
+      color: #002938;
     }
 
     .detail {
       font-size: 12.5px;
       color: #2d3748;
       line-height: 1.4;
-      outline: none;
-      min-height: 14px;
       font-weight: 500;
     }
-    .detail:hover { background: #f7fafc; border-radius: 3px; }
-    .detail:focus { background: #edf2f7; border-radius: 3px; }
-    .detail:empty::before {
-      content: 'Add note...';
-      color: #cbd5e0;
-      font-style: italic;
-      font-weight: 400;
-    }
 
-    .price-highlight {
-      font-size: 15px;
-      font-weight: 700;
-      color: #1a202c;
-    }
-
-    .price-sub {
-      font-size: 11px;
-      color: #718096;
-      font-weight: 400;
-    }
-
-    /* ── HERO PRICING ROW ── */
+    /* -- HERO PRICING ROW -- */
     tr.hero-row td {
       padding: 20px 12px;
-      border-bottom: 2px solid #e2e8f0;
+      border-bottom: 2px solid #CCDCE2;
     }
     tr.hero-row td:first-child {
       font-size: 14px;
       font-weight: 700;
-      color: #1a202c;
+      color: #002938;
     }
     tr.hero-row .detail {
+      font-family: 'Roboto Condensed', 'Roboto', sans-serif;
       font-size: 22px;
-      font-weight: 800;
+      font-weight: 700;
       letter-spacing: -0.5px;
       line-height: 1.2;
     }
     tr.hero-row .detail .hero-sub {
       display: block;
+      font-family: 'Roboto', sans-serif;
       font-size: 11px;
-      font-weight: 500;
-      color: #718096;
+      font-weight: 400;
+      color: #417B91;
       margin-top: 4px;
       letter-spacing: 0;
     }
@@ -311,10 +178,10 @@
       background: #f7fafc;
       border-left: 1px solid #edf2f7;
     }
-    tr.hero-row td.vendor-cell:nth-child(2) { border-top: 3px solid #e74c3c; }
-    tr.hero-row td.vendor-cell:nth-child(3) { border-top: 3px solid #3498db; }
-    tr.hero-row td.vendor-cell:nth-child(4) { border-top: 3px solid #2ecc71; }
-    tr.hero-row td.vendor-cell:nth-child(5) { border-top: 3px solid #f39c12; }
+    tr.hero-row td.vendor-cell:nth-child(2) { border-top: 3px solid #C62828; }
+    tr.hero-row td.vendor-cell:nth-child(3) { border-top: 3px solid #64BBDE; }
+    tr.hero-row td.vendor-cell:nth-child(4) { border-top: 3px solid #4CAF50; }
+    tr.hero-row td.vendor-cell:nth-child(5) { border-top: 3px solid #F2B233; }
 
     tr.hero-plan td {
       padding: 8px 12px;
@@ -322,16 +189,16 @@
       border-bottom: 1px solid #edf2f7;
     }
     tr.hero-plan td:first-child {
-      font-weight: 600;
-      color: #718096;
+      font-weight: 500;
+      color: #417B91;
       font-size: 12px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
     tr.hero-plan .detail {
       font-size: 12px;
-      font-weight: 600;
-      color: #4a5568;
+      font-weight: 500;
+      color: #004F6E;
     }
 
     .hero-section { display: none; }
@@ -339,71 +206,38 @@
     .footnote {
       text-align: center;
       font-size: 12px;
-      color: #a0aec0;
+      color: #417B91;
       padding: 16px 0 0;
-      outline: none;
     }
 
-    /* ── TOAST ── */
-    .toast {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%) translateY(80px);
-      background: #1a202c;
-      color: #fff;
-      padding: 10px 22px;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: 500;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-      z-index: 999;
-      opacity: 0;
-      transition: all 0.3s ease;
-      pointer-events: none;
-    }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    /* ── PRINT / PDF ── */
+    /* -- PRINT / PDF -- */
     @media print {
       body { background: #fff; padding: 10px; }
-      .toolbar, .nav, .row-actions, .section-actions, .edit-only, .btn-sm, .toast { display: none !important; }
-      .table-wrapper { box-shadow: none; border: 1px solid #e2e8f0; }
+      .top-nav { display: none !important; }
+      .table-wrapper { box-shadow: none; border: 1px solid #CCDCE2; }
       thead th { position: static; }
-      .detail:empty::before { display: none; }
-      .feature-name:hover, .detail:hover { background: none; }
     }
   </style>
 </head>
-<body class="locked">
+<body>
 
-<div class="container">
-
-  <nav class="nav no-print">
+<div class="top-nav no-print">
+  <div class="site-links">
     <a href="index.html">Home</a>
     <a href="summary.html">Summary</a>
     <a href="capabilities.html">Capabilities</a>
     <a href="current-vs-dam.html">Current vs. DAM</a>
+    <a href="methods.html">DAM Methods</a>
     <a href="pricing.html" class="active">Pricing</a>
-  </nav>
-
-  <div class="toolbar no-print">
-    <div class="toolbar-left">
-      <div class="hint edit-only"><span></span> Click any text to edit in place</div>
-    </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-      <button class="btn btn-lock" id="lock-btn" onclick="toggleLock()">&#128274; Unlock Editing</button>
-      <button class="btn btn-outline edit-only" onclick="addSection()">+ Section</button>
-      <button class="btn btn-outline edit-only" id="undo-btn" onclick="undo()" disabled>&#8617; Undo</button>
-      <button class="btn btn-primary edit-only" onclick="saveBaseline()">&#128190; Save as Baseline</button>
-      <button class="btn btn-outline edit-only" onclick="resetData()">&#8634; Reset</button>
-      <button class="btn btn-success" onclick="exportPDF()">Export PDF</button>
-    </div>
   </div>
+  <button class="nav-btn no-print" onclick="window.print()">Export PDF</button>
+</div>
+
+<div class="container">
 
   <div class="header">
-    <h1 contenteditable="false" spellcheck="false" id="title">DAM Pricing Comparison</h1>
-    <p contenteditable="false" spellcheck="false" id="subtitle">Cummings Electrical | Pricing Overview Across Four DAM Solutions</p>
+    <h1>DAM Pricing Comparison</h1>
+    <p>Cummings Electrical | Pricing Overview Across Four DAM Solutions</p>
   </div>
 
   <div class="table-wrapper">
@@ -418,27 +252,25 @@
       <thead>
         <tr>
           <th>Pricing Item</th>
-          <th contenteditable="false" spellcheck="false">Canto</th>
-          <th contenteditable="false" spellcheck="false">Bynder</th>
-          <th contenteditable="false" spellcheck="false">Brandfolder</th>
-          <th contenteditable="false" spellcheck="false">OpenAsset</th>
+          <th>Canto</th>
+          <th>Bynder</th>
+          <th>Brandfolder</th>
+          <th>OpenAsset</th>
         </tr>
       </thead>
       <tbody id="table-body"></tbody>
     </table>
   </div>
 
-  <p class="footnote" contenteditable="false" spellcheck="false">
+  <p class="footnote">
     Data sourced from vendor proposals &amp; pricing sheets, February 2026 &bull; Cummings Electrical DAM Evaluation &bull; All prices in USD
   </p>
 </div>
 
-<div class="toast" id="toast"></div>
-
 <script>
 const VENDORS = ['canto','bynder','brandfolder','openasset'];
 
-const DEFAULT_DATA = [
+const DATA = [
   { section: "Annual Pricing Overview", hero: true, rows: [
     { feature: "Annual Subscription", style: "hero",
       canto: { detail: "$62,752/yr", sub: "Canto DAM + Brand Studio Pro" },
@@ -521,141 +353,26 @@ const DEFAULT_DATA = [
   ]},
   { section: "Support & CSM", rows: [
     { feature: "Dedicated CSM", canto: { detail: "Included" }, bynder: { detail: "Standard Success Package" }, brandfolder: { detail: "Account manager + live chat" }, openasset: { detail: "N/A" } },
-    { feature: "Support Availability", canto: { detail: "Dedicated account manager" }, bynder: { detail: "24/7 · 8 tiers · 4 languages" }, brandfolder: { detail: "Live chat + knowledge base" }, openasset: { detail: "G2 Best Support 2026" } },
+    { feature: "Support Availability", canto: { detail: "Dedicated account manager" }, bynder: { detail: "24/7, 8 tiers, 4 languages" }, brandfolder: { detail: "Live chat + knowledge base" }, openasset: { detail: "G2 Best Support 2026" } },
     { feature: "Training", canto: { detail: "Included in onboarding" }, bynder: { detail: "Admin training (2 hrs) + webinars" }, brandfolder: { detail: "Platform + bulk + distribution training" }, openasset: { detail: "N/A" } },
   ]},
 ];
 
-/* ── State ── */
-let data = JSON.parse(JSON.stringify(DEFAULT_DATA));
-let locked = true;
-const undoStack = [];
-const MAX_UNDO = 10;
-
-function clone(obj) { return JSON.parse(JSON.stringify(obj)); }
-
-/* ── Lock / Unlock ── */
-
-function toggleLock() {
-  if (!locked) {
-    syncTextFromDOM();
-    persistData();
-  }
-  locked = !locked;
-  applyLockState();
-  render();
-  toast(locked ? 'Editing locked' : 'Editing unlocked');
+function esc(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
 }
-
-function applyLockState() {
-  document.body.classList.toggle('locked', locked);
-  const btn = document.getElementById('lock-btn');
-  if (!btn) return;
-  if (locked) {
-    btn.innerHTML = '&#128274; Unlock Editing';
-    btn.classList.remove('unlocked');
-  } else {
-    btn.innerHTML = '&#128275; Lock Editing';
-    btn.classList.add('unlocked');
-  }
-}
-
-/* ── Undo ── */
-
-function pushUndo() {
-  syncTextFromDOM();
-  undoStack.push(clone(data));
-  if (undoStack.length > MAX_UNDO) undoStack.shift();
-  updateUndoBtn();
-}
-
-function undo() {
-  if (undoStack.length === 0) return;
-  data = undoStack.pop();
-  persistData();
-  render();
-  updateUndoBtn();
-  toast('Undone');
-}
-
-function updateUndoBtn() {
-  const btn = document.getElementById('undo-btn');
-  if (!btn) return;
-  btn.disabled = undoStack.length === 0;
-  btn.textContent = undoStack.length > 0
-    ? '\u21A9 Undo (' + undoStack.length + ')'
-    : '\u21A9 Undo';
-}
-
-/* ── Persistence ── */
-
-function loadSaved() {
-  try {
-    if (!localStorage.getItem('dam-pricing-v3')) {
-      localStorage.removeItem('dam-pricing-data');
-      localStorage.removeItem('dam-pricing-baseline');
-      localStorage.setItem('dam-pricing-v3', '1');
-      return;
-    }
-    const saved = localStorage.getItem('dam-pricing-data');
-    if (saved) data = JSON.parse(saved);
-  } catch(e) {}
-}
-
-function persistData() {
-  localStorage.setItem('dam-pricing-data', JSON.stringify(data));
-}
-
-function syncTextFromDOM() {
-  const body = document.getElementById('table-body');
-  if (!body) return;
-  let sectionIdx = -1;
-  let rowIdx = -1;
-
-  body.querySelectorAll('tr').forEach(tr => {
-    if (tr.classList.contains('section-row')) {
-      sectionIdx++;
-      rowIdx = -1;
-      const nameEl = tr.querySelector('.section-name');
-      if (nameEl && data[sectionIdx]) data[sectionIdx].section = nameEl.textContent.trim();
-    } else if (tr.dataset.row !== undefined) {
-      rowIdx++;
-      if (!data[sectionIdx] || !data[sectionIdx].rows[rowIdx]) return;
-      const row = data[sectionIdx].rows[rowIdx];
-      const nameEl = tr.querySelector('.feature-name');
-      if (nameEl) row.feature = nameEl.textContent.trim();
-      VENDORS.forEach(v => {
-        const detailEl = tr.querySelector('.detail[data-vendor="' + v + '"]');
-        if (detailEl) row[v].detail = detailEl.textContent.trim();
-      });
-    }
-  });
-}
-
-function onBlurSave() {
-  syncTextFromDOM();
-  persistData();
-}
-
-/* ── Render ── */
 
 function render() {
   const body = document.getElementById('table-body');
   body.innerHTML = '';
-  const ce = locked ? 'false' : 'true';
 
-  data.forEach((section, si) => {
+  DATA.forEach((section, si) => {
     const isHero = section.hero === true;
     const sectionTr = document.createElement('tr');
     sectionTr.className = isHero ? 'hero-section' : 'section-row';
-    sectionTr.innerHTML =
-      '<td colspan="5">' +
-        '<span class="section-name" contenteditable="' + ce + '" spellcheck="false">' + esc(section.section) + '</span>' +
-        '<span class="section-actions no-print edit-only">' +
-          '<button class="btn btn-sm btn-outline" onclick="addRow(' + si + ')">+ Row</button>' +
-          '<button class="btn btn-sm btn-danger" onclick="deleteSection(' + si + ')" title="Delete section">&times;</button>' +
-        '</span>' +
-      '</td>';
+    sectionTr.innerHTML = '<td colspan="5"><span class="section-name">' + esc(section.section) + '</span></td>';
     body.appendChild(sectionTr);
 
     section.rows.forEach((row, ri) => {
@@ -668,175 +385,24 @@ function render() {
       } else {
         tr.className = ri % 2 === 1 ? 'alt' : '';
       }
-      tr.dataset.row = ri;
 
-      let html = '<td>' +
-        '<span class="feature-name" contenteditable="' + ce + '" spellcheck="false">' + esc(row.feature) + '</span>' +
-        '<span class="row-actions no-print edit-only">' +
-          '<button class="row-action-btn" onclick="deleteRow(' + si + ',' + ri + ')" title="Delete">&times;</button>' +
-        '</span>' +
-      '</td>';
+      let html = '<td><span class="feature-name">' + esc(row.feature) + '</span></td>';
 
       VENDORS.forEach(v => {
         const cell = row[v];
-        html += '<td class="vendor-cell">';
-        html += '<div class="detail" data-vendor="' + v + '" contenteditable="' + ce + '" spellcheck="false">' + esc(cell.detail);
+        html += '<td class="vendor-cell"><div class="detail">' + esc(cell.detail);
         if (cell.sub) {
           html += '<span class="hero-sub">' + esc(cell.sub) + '</span>';
         }
-        html += '</div>';
-        html += '</td>';
+        html += '</div></td>';
       });
 
       tr.innerHTML = html;
       body.appendChild(tr);
     });
   });
-
-  updateHeaderEditable();
-  attachAutoSave();
-  updateUndoBtn();
 }
 
-function updateHeaderEditable() {
-  const ce = locked ? 'false' : 'true';
-  document.querySelectorAll('.header [contenteditable], thead th[contenteditable], .footnote[contenteditable]').forEach(el => {
-    el.setAttribute('contenteditable', ce);
-  });
-}
-
-function attachAutoSave() {
-  document.querySelectorAll('[contenteditable="true"]').forEach(el => {
-    el.removeEventListener('blur', onBlurSave);
-    el.addEventListener('blur', onBlurSave);
-    el.addEventListener('keydown', e => {
-      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); el.blur(); }
-    });
-  });
-}
-
-/* ── Actions ── */
-
-function addRow(sectionIdx) {
-  pushUndo();
-  const newRow = { feature: "New Item" };
-  VENDORS.forEach(v => newRow[v] = { detail: "" });
-  data[sectionIdx].rows.push(newRow);
-  persistData();
-  render();
-  toast('Row added');
-  setTimeout(() => {
-    const names = document.querySelectorAll('.feature-name');
-    const last = names[names.length - 1];
-    if (last) { last.focus(); selectAll(last); }
-  }, 50);
-}
-
-function deleteRow(si, ri) {
-  pushUndo();
-  const name = data[si].rows[ri].feature;
-  data[si].rows.splice(ri, 1);
-  persistData();
-  render();
-  toast('Removed "' + name + '" \u2014 click Undo to restore');
-}
-
-function addSection() {
-  pushUndo();
-  const newSection = { section: "New Section", rows: [] };
-  const newRow = { feature: "New Item" };
-  VENDORS.forEach(v => newRow[v] = { detail: "" });
-  newSection.rows.push(newRow);
-  data.push(newSection);
-  persistData();
-  render();
-  toast('Section added');
-  setTimeout(() => {
-    const sections = document.querySelectorAll('.section-name');
-    const last = sections[sections.length - 1];
-    if (last) { last.focus(); selectAll(last); }
-  }, 50);
-}
-
-function deleteSection(si) {
-  pushUndo();
-  const name = data[si].section;
-  data.splice(si, 1);
-  persistData();
-  render();
-  toast('Removed "' + name + '" \u2014 click Undo to restore');
-}
-
-/* ── Baseline & Reset ── */
-
-function getBaseline() {
-  try {
-    const saved = localStorage.getItem('dam-pricing-baseline');
-    if (saved) return JSON.parse(saved);
-  } catch(e) {}
-  return clone(DEFAULT_DATA);
-}
-
-function resetData() {
-  const hasBaseline = localStorage.getItem('dam-pricing-baseline') !== null;
-  const label = hasBaseline ? 'saved baseline' : 'original defaults';
-  if (!confirm('Reset all data to the ' + label + '? Your current edits will be lost.')) return;
-  pushUndo();
-  data = getBaseline();
-  persistData();
-  render();
-  toast('Reset to ' + label);
-}
-
-function saveBaseline() {
-  syncTextFromDOM();
-  if (!confirm('Save current state as the new baseline? The Reset button will restore to this point.')) return;
-  localStorage.setItem('dam-pricing-baseline', JSON.stringify(data));
-  persistData();
-  toast('Baseline saved');
-}
-
-/* ── Export ── */
-
-function exportPDF() {
-  toast('Preparing PDF...');
-  setTimeout(() => window.print(), 300);
-}
-
-/* ── Utilities ── */
-
-function esc(str) {
-  const d = document.createElement('div');
-  d.textContent = str;
-  return d.innerHTML;
-}
-
-function selectAll(el) {
-  const range = document.createRange();
-  range.selectNodeContents(el);
-  const sel = window.getSelection();
-  sel.removeAllRanges();
-  sel.addRange(range);
-}
-
-function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  clearTimeout(el._t);
-  el._t = setTimeout(() => el.classList.remove('show'), 2400);
-}
-
-document.addEventListener('keydown', e => {
-  if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.target.closest('[contenteditable="true"]')) {
-    e.preventDefault();
-    undo();
-  }
-});
-
-/* ── Init ── */
-loadSaved();
-applyLockState();
 render();
 </script>
 

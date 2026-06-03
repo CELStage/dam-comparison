@@ -134,6 +134,9 @@
     tbody tr.alt td { background: #fafbfc; }
     tbody tr.alt:hover td { background: #f0f4f8; }
 
+    td[contenteditable="true"] { cursor: text; }
+    td[contenteditable="true"]:focus { outline: 2px solid #004F6E; outline-offset: -2px; background: #fff !important; }
+
     tbody td:first-child {
       text-align: left;
       padding-left: 24px;
@@ -229,8 +232,11 @@
     <a href="current-vs-dam.html">Current vs. DAM</a>
     <a href="methods.html">DAM Methods</a>
     <a href="pricing.html" class="active">Pricing</a>
+    <a href="rankings.html">Rankings</a>
+    <a href="dma.html">DMA</a>
   </div>
   <button class="nav-btn no-print" onclick="window.print()">Export PDF</button>
+  <button class="nav-btn no-print" id="export-csv-btn">Export CSV</button>
 </div>
 
 <div class="container">
@@ -265,6 +271,7 @@
   <p class="footnote">
     Data sourced from vendor proposals &amp; pricing sheets, February 2026 &bull; Cummings Electrical DAM Evaluation &bull; All prices in USD
   </p>
+  <p class="footnote no-print" style="padding-top: 0;">Click any cell in the table to edit. Changes are kept in memory until you export or refresh.</p>
 </div>
 
 <script>
@@ -386,11 +393,13 @@ function render() {
         tr.className = ri % 2 === 1 ? 'alt' : '';
       }
 
-      let html = '<td><span class="feature-name">' + esc(row.feature) + '</span></td>';
+      const featureContent = (row.feature || '').trim();
+      let html = '<td contenteditable="true" data-si="' + si + '" data-ri="' + ri + '" data-cell="feature"><span class="feature-name">' + esc(featureContent) + '</span></td>';
 
       VENDORS.forEach(v => {
         const cell = row[v];
-        html += '<td class="vendor-cell"><div class="detail">' + esc(cell.detail);
+        const displayText = (cell.detail || '') + (cell.sub ? '\n' + cell.sub : '');
+        html += '<td class="vendor-cell" contenteditable="true" data-si="' + si + '" data-ri="' + ri + '" data-cell="' + v + '"><div class="detail">' + esc(cell.detail || '');
         if (cell.sub) {
           html += '<span class="hero-sub">' + esc(cell.sub) + '</span>';
         }
@@ -403,7 +412,71 @@ function render() {
   });
 }
 
+function getCellText(el) {
+  return (el.innerText || '').trim();
+}
+
+function syncCellToData(cellEl) {
+  const si = parseInt(cellEl.getAttribute('data-si'), 10);
+  const ri = parseInt(cellEl.getAttribute('data-ri'), 10);
+  const cellType = cellEl.getAttribute('data-cell');
+  if (isNaN(si) || isNaN(ri) || !DATA[si] || !DATA[si].rows[ri]) return;
+  const row = DATA[si].rows[ri];
+  const text = getCellText(cellEl);
+
+  if (cellType === 'feature') {
+    row.feature = text;
+    return;
+  }
+  if (VENDORS.indexOf(cellType) === -1) return;
+  const parts = text.split(/\n/).map(s => s.trim()).filter(Boolean);
+  row[cellType].detail = parts[0] || '';
+  row[cellType].sub = parts.slice(1).join('\n') || '';
+}
+
+function csvEscape(val) {
+  const s = String(val == null ? '' : val);
+  if (/[",\r\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+  return s;
+}
+
+function exportCsv() {
+  const headers = ['Section', 'Pricing Item', 'Canto', 'Bynder', 'Brandfolder', 'OpenAsset'];
+  const lines = [headers.map(csvEscape).join(',')];
+  DATA.forEach(sec => {
+    sec.rows.forEach(row => {
+      const detail = v => (row[v] && (row[v].detail || '') + (row[v].sub ? ' ' + row[v].sub : '')) || '';
+      lines.push([
+        csvEscape(sec.section),
+        csvEscape(row.feature),
+        csvEscape(detail('canto')),
+        csvEscape(detail('bynder')),
+        csvEscape(detail('brandfolder')),
+        csvEscape(detail('openasset'))
+      ].join(','));
+    });
+  });
+  const csv = lines.join('\r\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'dam-pricing-comparison.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function initTableEvents() {
+  const table = document.getElementById('comparison-table');
+  table.addEventListener('blur', function(e) {
+    const td = e.target.closest('td[contenteditable="true"]');
+    if (td) syncCellToData(td);
+  }, true);
+  document.getElementById('export-csv-btn').addEventListener('click', exportCsv);
+}
+
 render();
+initTableEvents();
 </script>
 
 </body>

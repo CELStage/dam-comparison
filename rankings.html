@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cummings Electrical - DAM Rankings (1-10)</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Roboto+Condensed:wght@400;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f0f2f5;
+      color: #2d3748;
+      padding: 56px 20px 40px 20px;
+    }
+
+    .container { max-width: 1320px; margin: 0 auto; }
+
+    /* -- NAV (top bar) -- */
+    .top-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 20px; background: rgba(0,41,56,0.95);
+      backdrop-filter: blur(8px); border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .top-nav .site-links {
+      display: flex; gap: 8px;
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .top-nav .site-links::-webkit-scrollbar { display: none; }
+    .top-nav a {
+      color: #CCDCE2; text-decoration: none; font-size: 12px;
+      font-weight: 500; padding: 5px 12px; border-radius: 6px;
+      transition: all 0.15s; white-space: nowrap; flex-shrink: 0;
+      font-family: 'Roboto Condensed', 'Roboto', sans-serif;
+    }
+    .top-nav a:hover { color: #fff; background: rgba(255,255,255,0.1); }
+    .top-nav a.active { color: #fff; background: #004F6E; }
+    .top-nav .nav-actions { display: flex; align-items: center; flex-shrink: 0; }
+    .top-nav .nav-btn {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 12px; border: none; border-radius: 6px;
+      font-family: 'Roboto Condensed', 'Roboto', sans-serif;
+      font-size: 11px; font-weight: 700; cursor: pointer;
+      background: #4CAF50; color: #fff; transition: all 0.15s;
+      white-space: nowrap; flex-shrink: 0; margin-left: 8px;
+    }
+    .top-nav .nav-btn:hover { background: #388E3C; }
+
+    /* -- HEADER -- */
+    .header { text-align: center; margin-top: 28px; margin-bottom: 28px; }
+    .header h1 {
+      font-family: 'Roboto Condensed', 'Roboto', sans-serif;
+      font-size: 32px; font-weight: 700; color: #002938;
+      margin-bottom: 6px; letter-spacing: -0.5px;
+    }
+    .header p {
+      font-size: 15px; color: #718096; font-weight: 500;
+      max-width: 720px; margin: 0 auto; line-height: 1.6;
+    }
+
+    /* -- FRONT-RUNNER BANNER -- */
+    .frontrunner {
+      display: flex; align-items: center; gap: 20px;
+      background: linear-gradient(135deg, #002938, #004F6E);
+      border-radius: 16px; padding: 22px 28px; margin-bottom: 24px;
+      box-shadow: 0 6px 24px rgba(0,41,56,0.25); color: #fff;
+    }
+    .frontrunner .crown { font-size: 40px; line-height: 1; flex-shrink: 0; }
+    .frontrunner .fr-text { flex: 1; }
+    .frontrunner .fr-label {
+      font-family: 'Roboto Condensed', 'Roboto', sans-serif;
+      font-size: 12px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.5px; color: #64BBDE; margin-bottom: 2px;
+    }
+    .frontrunner .fr-name {
+      font-family: 'Roboto Condensed', 'Roboto', sans-serif;
+      font-size: 26px; font-weight: 800; letter-spacing: -0.3px;
+    }
+    .frontrunner .fr-sub { font-size: 13px; opacity: 0.85; margin-top: 3px; line-height: 1.5; }
+    .frontrunner .fr-score {
+      text-align: center; flex-shrink: 0; padding-left: 24px;
+      border-left: 1px solid rgba(255,255,255,0.2);
+    }
+    .frontrunner .fr-score .num {
+      font-family: 'Roboto Condensed', 'Roboto', sans-serif;
+      font-size: 44px; font-weight: 800; letter-spacing: -1px; line-height: 1;
+    }
+    .frontrunner .fr-score .lbl { font-size: 11px; opacity: 0.8; margin-top: 4px; }
+    @media (max-width: 640px) {
+      .frontrunner { flex-wrap: wrap; }
+      .frontrunner .fr-score { border-left: none; padding-left: 0; }
+    }
+
+    /* -- SCORE CARDS (overall averages) -- */
+    .score-cards {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 16px; margin-bottom: 28px;
+    }
+    @media (max-width: 800px) { .score-cards { grid-template-columns: 1fr 1fr; } }
+
+    .score-card {
+      background: #fff; border-radius: 14px; padding: 20px;
+      box-shadow: 0 3px 16px rgba(0,0,0,0.06);
+      text-align: center; border-top: 4px solid; position: relative;
+    }
+    .score-card.canto       { border-color: #C62828; }
+    .score-card.bynder      { border-color: #64BBDE; }
+    .score-card.brandfolder { border-color: #4CAF50; }
+    .score-card.openasset   { border-color: #F2B233; }
+    .score-card .rank-pill {
+      position: absolute; top: 12px; right: 12px;
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.5px; padding: 2px 8px; border-radius: 10px;
+      background: #edf2f7; color: #718096;
+    }
+    .score-card .rank-pill.win { background: #d1fae5; color: #065f46; }
+    .score-card .crown-mark {
+      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+      font-size: 22px;
+    }
+    .score-card h4 {
+      font-family: 'Roboto Condensed', 'Roboto', sans-serif;
+      font-size: 15px; font-weight: 700; color: #002938; margin-bottom: 8px;
+    }
+    .score-val {
+      font-family: 'Roboto Condensed', 'Roboto', sans-serif;
+      font-size: 38px; font-weight: 800; letter-spacing: -1px; line-height: 1;
+    }
+    .score-val .out-of { font-size: 16px; font-weight: 500; color: #a0aec0; }
+    .score-card.canto .score-val       { color: #C62828; }
+    .score-card.bynder .score-val      { color: #64BBDE; }
+    .score-card.brandfolder .score-val { color: #4CAF50; }
+    .score-card.openasset .score-val   { color: #F2B233; }
+    .score-label { font-size: 12px; color: #718096; font-weight: 600; margin-top: 4px; }
+    .score-bar-wrap {
+      margin-top: 10px; background: #edf2f7; border-radius: 6px;
+      height: 8px; overflow: hidden;
+    }
+    .score-bar-fill { height: 100%; border-radius: 6px; transition: width 0.6s ease; }
+    .score-card.canto .score-bar-fill       { background: #C62828; }
+    .score-card.bynder .score-bar-fill      { background: #64BBDE; }
+    .score-card.brandfolder .score-bar-fill { background: #4CAF50; }
+    .score-card.openasset .score-bar-fill   { background: #F2B233; }
+
+    /* -- TABLE -- */
+    .table-wrapper {
+      background: #fff; border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+      overflow-x: auto; margin-bottom: 24px;
+    }
+    table { width: 100%; border-collapse: collapse; min-width: 1040px; }
+    col.feature { width: 22%; }
+    col.vendor  { width: 19.5%; }
+
+    thead th {
+      padding: 16px 12px;
+      font-family: 'Roboto Condensed', 'Roboto', sans-serif;
+      font-size: 14px; font-weight: 700; letter-spacing: 0.3px;
+      text-align: center; color: #fff; position: sticky; top: 0; z-index: 2;
+    }
+    thead th:first-child {
+      background: #fff; color: #002938; text-align: left;
+      padding-left: 24px; font-size: 12px; text-transform: uppercase;
+      letter-spacing: 1.2px; font-weight: 700;
+    }
+    thead th:nth-child(2) { background: #C62828; }
+    thead th:nth-child(3) { background: #64BBDE; }
+    thead th:nth-child(4) { background: #4CAF50; }
+    thead th:nth-child(5) { background: #F2B233; }
+
+    tbody td {
+      padding: 14px 12px; font-size: 13px; text-align: center;
+      border-bottom: 1px solid #edf2f7; vertical-align: top;
+    }
+    tbody tr:hover td { background: #f9fbfc; }
+
+    tbody td.criterion {
+      text-align: left; padding-left: 24px; vertical-align: top;
+    }
+    td.criterion .c-name {
+      font-family: 'Roboto Condensed', 'Roboto', sans-serif;
+      font-weight: 700; font-size: 15px; color: #002938; display: block;
+      margin-bottom: 4px;
+    }
+    td.criterion .c-desc {
+      font-size: 12px; color: #718096; line-height: 1.45; font-weight: 400;
+    }
+    td.criterion .c-meta { display: flex; align-items: center; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+    td.criterion .c-must {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      background: #fde8e8; color: #C62828; padding: 2px 8px; border-radius: 10px;
+    }
+    td.criterion .c-weight {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11px; font-weight: 700; color: #004F6E;
+      background: #e8f4f8; padding: 2px 8px; border-radius: 10px;
+    }
+    td.criterion .c-weight .w-num { font-weight: 800; }
+    td.criterion .c-weight [contenteditable] { outline: none; min-width: 12px; text-align: center; }
+    td.criterion .c-weight [contenteditable]:focus { background: #fff; border-radius: 3px; }
+
+    .cell-score {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 38px; height: 38px; border-radius: 10px;
+      font-family: 'Roboto Condensed', 'Roboto', sans-serif;
+      font-size: 19px; font-weight: 800; color: #fff; margin-bottom: 8px;
+    }
+    .cell-score.high { background: #4CAF50; }
+    .cell-score.mid  { background: #F2B233; }
+    .cell-score.low  { background: #dc2626; }
+    .cell-rankwrap { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px; }
+    .cell-math {
+      font-family: 'Roboto Condensed', 'Roboto', sans-serif;
+      font-size: 12px; color: #718096; font-weight: 600; line-height: 1.2; text-align: left;
+    }
+    .cell-math .cell-total {
+      display: block; font-size: 18px; font-weight: 800; color: #002938; letter-spacing: -0.3px;
+    }
+    .cell-reason {
+      font-size: 11.5px; color: #4a5568; line-height: 1.45; text-align: left;
+    }
+
+    /* -- AVERAGE ROW -- */
+    tr.avg-row td {
+      background: #002938; color: #fff; padding: 16px 12px;
+      border-bottom: none;
+    }
+    tr.avg-row td.criterion {
+      font-family: 'Roboto Condensed', 'Roboto', sans-serif;
+      font-weight: 700; font-size: 14px; text-transform: uppercase;
+      letter-spacing: 1px; color: #fff;
+    }
+    tr.avg-row .avg-val {
+      font-family: 'Roboto Condensed', 'Roboto', sans-serif;
+      font-size: 26px; font-weight: 800; letter-spacing: -0.5px;
+    }
+    tr.avg-row .avg-out { font-size: 13px; font-weight: 500; opacity: 0.7; }
+
+    .footnote {
+      text-align: center; font-size: 12px; color: #a0aec0; padding: 16px 0 0;
+    }
+    .legend {
+      display: flex; justify-content: center; gap: 18px; flex-wrap: wrap;
+      margin-bottom: 24px; font-size: 12px; color: #718096; font-weight: 500;
+    }
+    .legend .item { display: inline-flex; align-items: center; gap: 6px; }
+    .legend .swatch { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+    .legend .swatch.high { background: #4CAF50; }
+    .legend .swatch.mid  { background: #F2B233; }
+    .legend .swatch.low  { background: #dc2626; }
+
+    /* -- PRINT / PDF -- */
+    @media print {
+      body { background: #fff; padding: 10px; padding-top: 0; }
+      .top-nav { display: none !important; }
+      .table-wrapper { box-shadow: none; border: 1px solid #e2e8f0; }
+      .score-card { box-shadow: none; border: 1px solid #e2e8f0; }
+      thead th { position: static; }
+      tbody tr { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-nav no-print">
+  <div class="site-links">
+    <a href="index.html">Home</a>
+    <a href="summary.html">Summary</a>
+    <a href="capabilities.html">Capabilities</a>
+    <a href="current-vs-dam.html">Current vs. DAM</a>
+    <a href="methods.html">DAM Methods</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="rankings.html" class="active">Rankings</a>
+    <a href="dma.html">DMA</a>
+  </div>
+  <div class="nav-actions">
+    <button class="nav-btn no-print" onclick="window.print()">Export PDF</button>
+    <button class="nav-btn no-print" id="export-csv-btn">Export CSV</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="header">
+    <h1>Platform Rankings &amp; Total Scores</h1>
+    <p>Each platform earns a <strong>Rank (1&ndash;10)</strong> per criterion. That rank is multiplied by the criterion's <strong>Weight</strong> to produce a <strong>Total</strong> (e.g., Rank 7 &times; Weight 8 = 56). Every platform's totals are summed into a grand <strong>Total Score</strong> (out of a maximum of <span id="max-total">530</span>) to crown the front-runner.</p>
+  </div>
+
+  <div class="frontrunner" id="frontrunner"></div>
+
+  <div class="score-cards" id="score-cards"></div>
+
+  <div class="legend no-print">
+    <span class="item"><span class="swatch high"></span> Strong (8&ndash;10)</span>
+    <span class="item"><span class="swatch mid"></span> Adequate (5&ndash;7)</span>
+    <span class="item"><span class="swatch low"></span> Weak (1&ndash;4)</span>
+  </div>
+
+  <div class="table-wrapper">
+    <table id="rankings-table">
+      <colgroup>
+        <col class="feature">
+        <col class="vendor">
+        <col class="vendor">
+        <col class="vendor">
+        <col class="vendor">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>Criterion</th>
+          <th>Canto</th>
+          <th>Bynder</th>
+          <th>Brandfolder</th>
+          <th>OpenAsset</th>
+        </tr>
+      </thead>
+      <tbody id="table-body"></tbody>
+    </table>
+  </div>
+
+  <p class="footnote">
+    Data sourced from vendor proposals, product websites &amp; documentation, and analyst reviews (G2, Gartner, Forrester), February 2026 &bull; Cummings Electrical DAM Evaluation. Scores are an informed assessment, not vendor-published figures.
+  </p>
+  <p class="footnote no-print" style="padding-top: 0;">Click any score <em>or</em> weight to edit it &mdash; the weighted standings and front-runner update automatically. Use Export CSV to pull the table into your spreadsheet.</p>
+</div>
+
+<script>
+const VENDORS = ['canto', 'bynder', 'brandfolder', 'openasset'];
+const VENDOR_LABELS = { canto: 'Canto', bynder: 'Bynder', brandfolder: 'Brandfolder', openasset: 'OpenAsset' };
+
+const DATA = [
+  {
+    name: "Powerful, Customizable Search",
+    desc: "Rank on search customization, speed, and AI assistance. A must-have: the platform should make locating assets fast and targeted.",
+    weight: 10,
+    must: true,
+    canto:       { score: 8, reason: "AI Visual Search with conversational queries, Smart Tags, OCR and facial recognition. Fast, flexible search across image and video." },
+    bynder:      { score: 10, reason: "Best-in-class: natural-language conversational search, search-by-image and similar-image, plus full taxonomy management for tuning." },
+    brandfolder: { score: 7, reason: "Strong similarity engine, AI auto-tag and in-document/OCR search, but no native natural-language search and quality depends on taxonomy setup." },
+    openasset:   { score: 7, reason: "More capable than its niche implies: AI-powered visual search, image-similarity detection, facial recognition and Content Assist auto-tagging \u2014 though tuned for AEC project/metadata rather than general marketing libraries." }
+  },
+  {
+    name: "Platform Usage Tracking & Measurements",
+    desc: "How well the platform reports on usage data \u2014 who uses assets, how, and how often.",
+    weight: 5,
+    canto:       { score: 5, reason: "Canto does provide usage and download reporting (views, downloads, user activity), but it is less in-depth than Bynder/Brandfolder and the stronger analytics sit outside the base plan quoted." },
+    bynder:      { score: 8, reason: "Full Analytics module (Analytics Light included) covering asset and user activity." },
+    brandfolder: { score: 9, reason: "Strongest analytics: Insights dashboard plus a BI Data Connector to tie asset performance to ROI." },
+    openasset:   { score: 2, reason: "No native analytics dashboard; usage measurement is not a core capability." }
+  },
+  {
+    name: "Duplication & Similarity Detection",
+    desc: "Does the platform identify duplicates and surface visually similar assets?",
+    weight: 7,
+    canto:       { score: 5, reason: "Has real duplicate detection \u2014 it scans the whole library by filename or MD5 hash and groups duplicates for review \u2014 but lacks the visual/AI similarity engine that Bynder and Brandfolder offer." },
+    bynder:      { score: 8, reason: "Duplicate detection at upload and in the manager, plus similar-image search." },
+    brandfolder: { score: 9, reason: "Duplicate detection on upload and library-wide, backed by a dedicated similarity engine." },
+    openasset:   { score: 6, reason: "Includes duplicate file detection; similarity is AEC/visual-oriented rather than broad." }
+  },
+  {
+    name: "Version Retention",
+    desc: "Does the platform support version history/control, and how robust is it?",
+    weight: 6,
+    canto:       { score: 7, reason: "Version history plus an Approval Hub with visual diff between versions." },
+    bynder:      { score: 7, reason: "Mature versioning with annotations and asset workflow controls." },
+    brandfolder: { score: 8, reason: "Reliable version control integrated with approval workflows and asset history." },
+    openasset:   { score: 6, reason: "Version control is present but more basic than the general-purpose DAMs." }
+  },
+  {
+    name: "Tech-Stack Integrations",
+    desc: "How well it integrates with your tools \u2014 native vs. additional cost. Breadth and depth of the ecosystem.",
+    weight: 9,
+    canto:       { score: 8, reason: "45+ integrations with deep, bidirectional Adobe CC + Microsoft Office, Figma, Canva \u2014 included, not add-on priced." },
+    bynder:      { score: 9, reason: "Largest ecosystem at 155+ integrations, SDK/developer toolkit, and strategic CRM partnerships." },
+    brandfolder: { score: 8, reason: "40+ integrations including Adobe, MS Office, Figma and Salesforce; a few configs (e.g., HubSpot) carry one-time fees." },
+    openasset:   { score: 5, reason: "Only ~15 integrations and InDesign-only creative tooling, but uniquely native to AEC systems (Deltek, Unanet, Procore)." }
+  },
+  {
+    name: "Pricing Transparency",
+    desc: "Is the pricing model clear? Can you see where the money goes and how it scales?",
+    weight: 5,
+    canto:       { score: 4, reason: "Bundled tiers (DAM + Brand Studio Pro), multi-year terms and onboarding waivers make true cost hard to read." },
+    bynder:      { score: 5, reason: "Quote-driven with a 3-year commitment and negotiated discounts; no free trial and limited published pricing." },
+    brandfolder: { score: 7, reason: "Clear, comparable tiers (Premium and Core) with defined users/storage and 1-year terms." },
+    openasset:   { score: 9, reason: "Most transparent: published list pricing by user count and clearly itemized module/employee-object add-ons." }
+  },
+  {
+    name: "Customizable UI/UX for Public Sharing",
+    desc: "Can you customize the UI for public/guest sharing? Quality and flexibility of the public-facing experience.",
+    weight: 7,
+    canto:       { score: 8, reason: "Unlimited customizable portals, style guides and share links for external/guest audiences." },
+    bynder:      { score: 8, reason: "Branded portals, homepage and brand-guidelines experiences, though oriented toward governance." },
+    brandfolder: { score: 9, reason: "Best-in-class UI with polished Brand Portals, expiring/view-only share links, and Smart CDN delivery." },
+    openasset:   { score: 3, reason: "No brand portals or style guides; offers secure file sharing only, with little public-facing customization." }
+  },
+  {
+    name: "Ease of Use for Non-Administrators",
+    desc: "How digestible is the platform for non-admin users (not guests)? How easy is login \u2192 find asset \u2192 download?",
+    weight: 8,
+    canto:       { score: 8, reason: "Intuitive, visual interface that non-technical teams adopt with minimal training." },
+    bynder:      { score: 9, reason: "For end users it rates nearly on par with Brandfolder (G2 Ease of Use 8.8 vs 8.9): intuitive search, preview and sharing. The reported learning curve sits with admins/configuration, not day-to-day asset finding." },
+    brandfolder: { score: 9, reason: "Consistently cited as the simplest to adopt (G2 Ease of Use 8.9, 3rd-easiest DAM) \u2014 now level with Bynder for everyday non-admin users." },
+    openasset:   { score: 6, reason: "Approachable within an AEC workflow, but its project/employee model is less familiar to general users." }
+  }
+];
+
+function scoreClass(s) {
+  if (s >= 8) return 'high';
+  if (s >= 5) return 'mid';
+  return 'low';
+}
+
+function esc(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+function computeAverages() {
+  const simpleTot = {}, weightedTot = {};
+  VENDORS.forEach(v => { simpleTot[v] = 0; weightedTot[v] = 0; });
+  let weightSum = 0;
+  DATA.forEach(row => {
+    const w = Number(row.weight) || 0;
+    weightSum += w;
+    VENDORS.forEach(v => {
+      const s = Number(row[v].score) || 0;
+      simpleTot[v] += s;
+      weightedTot[v] += s * w;
+    });
+  });
+  const simple = {}, weighted = {};
+  VENDORS.forEach(v => {
+    simple[v] = simpleTot[v] / DATA.length;
+    weighted[v] = weightSum > 0 ? weightedTot[v] / weightSum : 0;
+  });
+  return { simple, weighted, weightSum };
+}
+
+/* Total points: each cell = score (rank) x weight; platform total = sum of cells. */
+function computeTotals() {
+  const totals = {};
+  VENDORS.forEach(v => totals[v] = 0);
+  let maxTotal = 0;
+  DATA.forEach(row => {
+    const w = Number(row.weight) || 0;
+    maxTotal += w * 10;
+    VENDORS.forEach(v => { totals[v] += (Number(row[v].score) || 0) * w; });
+  });
+  return { totals, maxTotal };
+}
+
+function rankedVendors() {
+  const { totals } = computeTotals();
+  return VENDORS.slice().sort((a, b) => totals[b] - totals[a]);
+}
+
+function renderFrontRunner() {
+  const { totals, maxTotal } = computeTotals();
+  const order = rankedVendors();
+  const winner = order[0];
+  const runnerUp = order[1];
+  const margin = totals[winner] - totals[runnerUp];
+  const el = document.getElementById('frontrunner');
+  el.innerHTML =
+    '<div class="crown">\uD83C\uDFC6</div>' +
+    '<div class="fr-text">' +
+      '<div class="fr-label">Ultimate Front-Runner</div>' +
+      '<div class="fr-name">' + VENDOR_LABELS[winner] + '</div>' +
+      '<div class="fr-sub">Highest total score across all eight criteria \u2014 leading ' +
+        VENDOR_LABELS[runnerUp] + ' by ' + margin + ' points.</div>' +
+    '</div>' +
+    '<div class="fr-score">' +
+      '<div class="num">' + totals[winner] + '</div>' +
+      '<div class="lbl">Total Score / ' + maxTotal + '</div>' +
+    '</div>';
+}
+
+function renderScoreCards() {
+  const { totals, maxTotal } = computeTotals();
+  const { weighted } = computeAverages();
+  const order = rankedVendors();
+  const rankMap = {};
+  order.forEach((v, i) => rankMap[v] = i + 1);
+  const ordinals = { 1: '1st', 2: '2nd', 3: '3rd', 4: '4th' };
+  const container = document.getElementById('score-cards');
+  container.innerHTML = '';
+  VENDORS.forEach(v => {
+    const total = totals[v];
+    const pct = maxTotal > 0 ? Math.round((total / maxTotal) * 100) : 0;
+    const rank = rankMap[v];
+    const isWin = rank === 1;
+    const card = document.createElement('div');
+    card.className = 'score-card ' + v;
+    card.innerHTML =
+      (isWin ? '<span class="crown-mark">\uD83C\uDFC6</span>' : '') +
+      '<span class="rank-pill' + (isWin ? ' win' : '') + '">' + ordinals[rank] + ' Place</span>' +
+      '<h4>' + VENDOR_LABELS[v] + '</h4>' +
+      '<div class="score-val">' + total + '<span class="out-of">/' + maxTotal + '</span></div>' +
+      '<div class="score-label">Total Score &middot; ' + pct + '% &middot; avg ' + weighted[v].toFixed(1) + '/10</div>' +
+      '<div class="score-bar-wrap"><div class="score-bar-fill" style="width:' + pct + '%"></div></div>';
+    container.appendChild(card);
+  });
+}
+
+function renderTable() {
+  const body = document.getElementById('table-body');
+  body.innerHTML = '';
+
+  DATA.forEach((row, ri) => {
+    const tr = document.createElement('tr');
+    let html =
+      '<td class="criterion">' +
+        '<span class="c-name">' + esc(row.name) + '</span>' +
+        '<span class="c-desc">' + esc(row.desc) + '</span>' +
+        '<span class="c-meta">' +
+          '<span class="c-weight">Weight: <span class="w-num" contenteditable="true" data-weight-ri="' + ri + '">' + row.weight + '</span>/10</span>' +
+          (row.must ? '<span class="c-must">Must-Have</span>' : '') +
+        '</span>' +
+      '</td>';
+
+    VENDORS.forEach(v => {
+      const cell = row[v];
+      const total = (Number(cell.score) || 0) * (Number(row.weight) || 0);
+      html +=
+        '<td>' +
+          '<div class="cell-rankwrap">' +
+            '<span class="cell-score ' + scoreClass(cell.score) + '" contenteditable="true" ' +
+              'data-ri="' + ri + '" data-vendor="' + v + '">' + cell.score + '</span>' +
+            '<span class="cell-math">&times; ' + (Number(row.weight) || 0) +
+              '<span class="cell-total">= ' + total + '</span></span>' +
+          '</div>' +
+          '<div class="cell-reason">' + esc(cell.reason) + '</div>' +
+        '</td>';
+    });
+
+    tr.innerHTML = html;
+    body.appendChild(tr);
+  });
+
+  const { totals, maxTotal } = computeTotals();
+  const order = rankedVendors();
+  const winner = order[0];
+  const avgTr = document.createElement('tr');
+  avgTr.className = 'avg-row';
+  let avgHtml = '<td class="criterion">Total Score</td>';
+  VENDORS.forEach(v => {
+    const mark = v === winner ? ' \uD83C\uDFC6' : '';
+    avgHtml += '<td><span class="avg-val">' + totals[v] + mark + '</span><span class="avg-out">/' + maxTotal + '</span></td>';
+  });
+  avgTr.innerHTML = avgHtml;
+  body.appendChild(avgTr);
+}
+
+function handleScoreEdit(el) {
+  const ri = parseInt(el.getAttribute('data-ri'), 10);
+  const vendor = el.getAttribute('data-vendor');
+  if (isNaN(ri) || !DATA[ri] || VENDORS.indexOf(vendor) === -1) return;
+  let val = parseInt((el.innerText || '').replace(/[^0-9]/g, ''), 10);
+  if (isNaN(val)) val = 0;
+  val = Math.max(0, Math.min(10, val));
+  DATA[ri][vendor].score = val;
+  render();
+}
+
+function csvEscape(val) {
+  const s = String(val == null ? '' : val);
+  if (/[",\r\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+  return s;
+}
+
+function exportCsv() {
+  const headers = [
+    'Criterion', 'Description', 'Weight', 'Must-Have',
+    'Canto Rank', 'Canto Total', 'Canto Reasoning',
+    'Bynder Rank', 'Bynder Total', 'Bynder Reasoning',
+    'Brandfolder Rank', 'Brandfolder Total', 'Brandfolder Reasoning',
+    'OpenAsset Rank', 'OpenAsset Total', 'OpenAsset Reasoning'
+  ];
+  const lines = [headers.map(csvEscape).join(',')];
+  DATA.forEach(row => {
+    const w = Number(row.weight) || 0;
+    const pts = v => (Number(row[v].score) || 0) * w;
+    lines.push([
+      csvEscape(row.name),
+      csvEscape(row.desc),
+      csvEscape(row.weight),
+      csvEscape(row.must ? 'Yes' : ''),
+      csvEscape(row.canto.score),       csvEscape(pts('canto')),       csvEscape(row.canto.reason),
+      csvEscape(row.bynder.score),      csvEscape(pts('bynder')),      csvEscape(row.bynder.reason),
+      csvEscape(row.brandfolder.score), csvEscape(pts('brandfolder')), csvEscape(row.brandfolder.reason),
+      csvEscape(row.openasset.score),   csvEscape(pts('openasset')),   csvEscape(row.openasset.reason)
+    ].join(','));
+  });
+  const { totals, maxTotal } = computeTotals();
+  const { weighted } = computeAverages();
+  lines.push([
+    csvEscape('TOTAL SCORE (out of ' + maxTotal + ')'), '', '', '',
+    '', csvEscape(totals.canto), '',
+    '', csvEscape(totals.bynder), '',
+    '', csvEscape(totals.brandfolder), '',
+    '', csvEscape(totals.openasset), ''
+  ].join(','));
+  lines.push([
+    csvEscape('Weighted Average (out of 10)'), '', '', '',
+    '', csvEscape(weighted.canto.toFixed(2)), '',
+    '', csvEscape(weighted.bynder.toFixed(2)), '',
+    '', csvEscape(weighted.brandfolder.toFixed(2)), '',
+    '', csvEscape(weighted.openasset.toFixed(2)), ''
+  ].join(','));
+
+  const csv = lines.join('\r\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'dam-platform-rankings.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function handleWeightEdit(el) {
+  const ri = parseInt(el.getAttribute('data-weight-ri'), 10);
+  if (isNaN(ri) || !DATA[ri]) return;
+  let val = parseInt((el.innerText || '').replace(/[^0-9]/g, ''), 10);
+  if (isNaN(val)) val = 0;
+  val = Math.max(0, Math.min(10, val));
+  DATA[ri].weight = val;
+  render();
+}
+
+function render() {
+  const { maxTotal } = computeTotals();
+  const maxEl = document.getElementById('max-total');
+  if (maxEl) maxEl.textContent = maxTotal;
+  renderFrontRunner();
+  renderScoreCards();
+  renderTable();
+}
+
+function init() {
+  render();
+  const table = document.getElementById('rankings-table');
+  table.addEventListener('blur', function(e) {
+    const scoreEl = e.target.closest('.cell-score[contenteditable="true"]');
+    if (scoreEl) { handleScoreEdit(scoreEl); return; }
+    const weightEl = e.target.closest('[data-weight-ri]');
+    if (weightEl) handleWeightEdit(weightEl);
+  }, true);
+  table.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      const el = e.target.closest('.cell-score[contenteditable="true"], [data-weight-ri]');
+      if (el) { e.preventDefault(); el.blur(); }
+    }
+  });
+  document.getElementById('export-csv-btn').addEventListener('click', exportCsv);
+}
+
+init();
+</script>
+
+</body>
+</html>

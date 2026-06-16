@@ -125,8 +125,29 @@
     .verdict.in { color: #065f46; } .verdict.out { color: #b91c1c; }
 
     /* MUST BREAKDOWN MODAL */
-    .modal-body-single { display: block !important; }
-    .must-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .must-modal-body { display: block !important; padding: 22px 26px; }
+    .must-context { margin-bottom: 4px; }
+    .must-section-hd {
+      font-family: 'Roboto Condensed', 'Roboto', sans-serif; font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1.2px; color: #718096; margin: 22px 0 14px; padding-top: 18px; border-top: 2px solid #e2e8f0;
+    }
+    .must-platform-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    @media (max-width: 760px) { .must-platform-grid { grid-template-columns: 1fr; } }
+    .must-verdict {
+      font-family: 'Roboto Condensed', 'Roboto', sans-serif; font-size: 11px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.4px; padding: 3px 10px; border-radius: 20px;
+    }
+    .must-verdict.pass { background: #d1fae5; color: #065f46; }
+    .must-verdict.cond { background: #fef3c7; color: #92400e; }
+    .must-verdict.fail { background: #fee2e2; color: #b91c1c; }
+    .must-flag {
+      font-size: 11.5px; line-height: 1.5; color: #9a3412; background: #fff7ed; border: 1px solid #fed7aa;
+      border-radius: 8px; padding: 8px 10px; margin-bottom: 10px;
+    }
+    .must-flag::before { content: 'Review flag: '; font-weight: 800; }
+    .must-foot { display: flex; flex-direction: column; gap: 10px; }
+    .must-foot-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; }
+    .must-foot-note { font-size: 11.5px; color: #64748b; line-height: 1.5; width: 100%; }
     .must-nav {
       font-family: 'Roboto Condensed', 'Roboto', sans-serif; font-size: 12px; font-weight: 700; color: #004F6E;
       background: #e8f4f8; border: 1px solid #cfe6f0; padding: 7px 14px; border-radius: 8px; cursor: pointer; transition: all 0.15s;
@@ -367,7 +388,7 @@
 
   <!-- 2. MUSTS -->
   <div class="section">
-    <div class="section-head"><span class="num">2</span><h2>Musts &mdash; Mandatory Go / No-Go</h2><span class="sub">Click a Must to open its breakdown</span></div>
+    <div class="section-head"><span class="num">2</span><h2>Musts &mdash; Mandatory Go / No-Go</h2><span class="sub">Click a Must for process context and per-platform pass/fail reasoning</span></div>
     <div class="section-body">
       <div class="scroll-x">
         <table class="musts-table" id="musts-table"></table>
@@ -403,7 +424,7 @@
         <div>
           <div class="rc-label">Recommended Platform</div>
           <div class="rc-name">Bynder</div>
-          <p>Bynder passes every mandatory Must and earns the highest weighted Want score of the surviving options &mdash; though by a narrow margin (<strong>472 vs Brandfolder's 468, just four points</strong>). It leads on the most heavily-weighted criteria here &mdash; search (weight 10) and tech-stack integrations (weight 9) &mdash; while meeting our security and universal-access requirements. Brandfolder finishes just behind and stays very close, leading on analytics, pricing transparency and public-sharing UI/UX while tying Bynder on ease-of-use, and remains a strong alternative if contract flexibility (1-year vs Bynder's 3-year) or onboarding simplicity is weighted more heavily. Canto (394) and OpenAsset (317) follow. SharePoint and Adobe Bridge are eliminated: each fails multiple Musts (no flexible organization, no true single source of truth, limited universal access or adoption path).</p>
+          <p>Bynder passes every mandatory Must and earns the highest weighted Want score of the surviving options &mdash; though by a narrow margin (<strong>472 vs Brandfolder's 468, just four points</strong>). It leads on the most heavily-weighted criteria here &mdash; search (weight 10) and tech-stack integrations (weight 9) &mdash; while meeting our security and universal-access requirements. Brandfolder finishes just behind and stays very close, leading on analytics, pricing transparency and public-sharing UI/UX while tying Bynder on ease-of-use, and remains a strong alternative if contract flexibility (1-year vs Bynder's 3-year) or onboarding simplicity is weighted more heavily. Canto (394) and OpenAsset (317) follow. SharePoint and Adobe Bridge are eliminated: each fails multiple Musts including flexible organization, single source of truth, and attainable DAM adoption.</p>
         </div>
       </div>
     </div>
@@ -461,7 +482,7 @@
       </div>
       <button class="modal-close" id="must-close" aria-label="Close">&times;</button>
     </div>
-    <div class="modal-body modal-body-single" id="must-body"></div>
+    <div class="modal-body must-modal-body" id="must-body"></div>
     <div class="modal-foot must-foot" id="must-foot"></div>
   </div>
 </div>
@@ -585,7 +606,7 @@ const MUSTS = [
   { line: 'Line 15', tab: 'Attainable Adoption', title: 'Attainable Adoption',
     short: 'Attainable adoption',
     desc: 'An attainable, well-supported path to adopt the platform into our tech stack.',
-    go: { canto: 1, bynder: 1, brandfolder: 1, openasset: 1, sharepoint: 1, adobebridge: 0 },
+    go: { canto: 1, bynder: 1, brandfolder: 1, openasset: 1, sharepoint: 0, adobebridge: 0 },
     blocks: [
       { kind: 'req', label: 'Requirement', list: [
         'The platform must allow for us to have an attainable way to easily adopt it into our tech stack \u2014 through onboarding, training programs, extensive resources and documentation, or similar support.',
@@ -593,6 +614,234 @@ const MUSTS = [
       ]},
       { kind: 'sol', label: 'Why It Matters', text: 'Adoption is where most tools quietly fail. Without an accessible ramp-up path, standards get set by guesswork, the workload falls on one internal team, and the cost of the platform is never offset because it is never fully embraced. A supported, well-documented onboarding experience protects the investment and gets us to value faster.' }
     ]
+  }
+];
+
+/* Per-platform Must verdicts — index-aligned with MUSTS[]. flag = accuracy review note. */
+const MUST_PLATFORM = [
+  { /* 0 — Access Control */
+    canto: {
+      sum: 'Role-based user groups, granular download/view/edit rights, and branded portals for external stakeholders — sharing stays inside the DAM with revocable links and audit history.',
+      feats: ['User roles & permissions', 'Portals & collections', 'Download limits & expiring links'],
+      link: 'https://support.canto.com/hc/en-us/articles/23001536792985-User-Roles-and-Permissions'
+    },
+    bynder: {
+      sum: 'Profiles, user groups, and permission modules control who sees, uploads, or downloads assets. Collections and Brand Portals support controlled external sharing without duplicating files off-platform.',
+      feats: ['Profiles & permission modules', 'Brand Portals', 'Activity logging'],
+      link: 'https://support.bynder.com/hc/en-us/articles/360013932339-User-Roles-Overview'
+    },
+    brandfolder: {
+      sum: 'Guest, Collaborator, and Admin roles with section-level permissions. Share links and Brand Portals let marketing gate external access while keeping a single library.',
+      feats: ['Role-based access', 'Brand Portals', 'Guest & collaborator tiers'],
+      link: 'https://help.smartsheet.com/articles/2482960-User-Roles-and-Permissions'
+    },
+    openasset: {
+      sum: 'User groups and project-linked permissions control internal access. Portals provide password-protected external sharing with download controls — replacing WeTransfer-style workflows.',
+      feats: ['User groups', 'Project permissions', 'External portals'],
+      link: 'https://success.openasset.com/en/articles/9403484-portals-share-files-information-with-others'
+    },
+    sharepoint: {
+      sum: 'SharePoint supports site/library permissions, sharing links, and guest access within M365 — adequate for internal/external document control, though not DAM-grade asset permissions.',
+      feats: ['Permission levels', 'Sharing links & guests', 'M365 identity'],
+      link: 'https://learn.microsoft.com/en-us/sharepoint/understanding-permission-levels'
+    },
+    adobebridge: {
+      sum: 'Bridge is a local file browser — no central RBAC, no managed external portals, and no per-asset permission layer. Access is whatever the OS folder grants; collections cannot be shared across users\' machines.',
+      feats: ['Local folder access only', 'No team RBAC', 'No managed external sharing'],
+      link: 'https://community.adobe.com/t5/bridge-discussions/bridge-does-not-support-cloud-services-other-than-adobe-s-own/td-p/13384775'
+    }
+  },
+  { /* 1 — Flexible Organization */
+    canto: {
+      sum: 'Assets live in albums and collections with rich metadata and Smart Tags — one file can appear in multiple organizational contexts without duplication.',
+      feats: ['Albums & collections', 'Metadata & Smart Tags', 'Multi-context filing'],
+      link: 'https://support.canto.com/hc/en-us/articles/23001646882833-Albums-Overview'
+    },
+    bynder: {
+      sum: 'Taxonomy-driven metaproperties and collections decouple storage from findability — assets are not locked to a single folder path.',
+      feats: ['Metaproperties & taxonomy', 'Collections', 'Smart filters'],
+      link: 'https://support.bynder.com/hc/en-us/articles/360013932359-Understanding-Metaproperties'
+    },
+    brandfolder: {
+      sum: 'Sections, tags, and the Asset Automation Engine organize assets by rules and metadata — not by forcing a single directory choice at upload.',
+      feats: ['Sections & tags', 'Automation rules', 'Metadata-first browse'],
+      link: 'https://help.smartsheet.com/articles/2482959-Organizing-Assets-in-Brandfolder'
+    },
+    openasset: {
+      sum: 'Project, employee, and keyword metadata let AEC assets belong to multiple contexts (client, sector, location) without copying files across folder trees.',
+      feats: ['Project-linked metadata', 'Keywords & categories', 'Cross-project search'],
+      link: 'https://success.openasset.com/en/articles/2912119-uploading-storing-your-files'
+    },
+    sharepoint: {
+      sum: 'SharePoint organizes primarily through document libraries and nested folders. Metadata columns exist but browsing and permissions are folder-centric — the exact pain this Must targets.',
+      feats: ['Folder-based libraries', 'Limited metadata columns', 'Duplicate copies across sites'],
+      link: 'https://learn.microsoft.com/en-us/sharepoint/metadata-and-information-management'
+    },
+    adobebridge: {
+      sum: 'Bridge mirrors the underlying folder tree on disk or network shares. Collections are local to each user\'s instance and cannot be shared across the team.',
+      feats: ['Folder hierarchy only', 'Local collections', 'No shared taxonomy'],
+      link: 'https://daminion.net/articles/tips/adobe-bridge-vs-digital-asset-management/'
+    }
+  },
+  { /* 2 — Single Source of Truth */
+    canto: {
+      sum: 'One cloud library with version history, approval workflows, and linked derivatives — approved assets stay authoritative; outdated versions archive instead of scattering copies.',
+      feats: ['Version history', 'Approval Hub', 'Central cloud library'],
+      link: 'https://www.canto.com/product/approval-hub/'
+    },
+    bynder: {
+      sum: 'Bynder positions the DAM as the single source of truth — versioned assets, taxonomy, and integrations push approved content outward without maintaining parallel libraries.',
+      feats: ['Version control', 'Single authoritative library', 'Downstream integrations'],
+      link: 'https://www.bynder.com/en/products/digital-asset-management/'
+    },
+    brandfolder: {
+      sum: 'One Brandfolder library with versioning and Smart CDN delivery — when the master asset updates, embedded and shared instances reflect the change.',
+      feats: ['Versioning workflow', 'Smart CDN sync', 'Duplicate detection'],
+      link: 'https://help.smartsheet.com/articles/2482970-Versioning-workflow'
+    },
+    openasset: {
+      sum: 'Project photography and marketing files live in one OpenAsset library tied to projects and proposals — InDesign/PPT integrations pull from the same approved source.',
+      feats: ['Project-linked library', 'Version retention', 'InDesign integration'],
+      link: 'https://success.openasset.com/en/articles/2912119-uploading-storing-your-files'
+    },
+    sharepoint: {
+      sum: 'SharePoint excels at team documents but encourages copies across sites, Teams channels, and OneDrive. There is no DAM-style deduplication or creative-asset version authority — the K Drive + SharePoint split we have today.',
+      feats: ['Multiple site libraries', 'No creative SSOT', 'Manual sync across locations'],
+      link: 'https://learn.microsoft.com/en-us/sharepoint/governance-versioning-content-types-and-workflows'
+    },
+    adobebridge: {
+      sum: 'Bridge reads files where they sit on a network share — it does not enforce one team-wide authoritative record. Metadata lives in per-user caches; there is no shared version control or deduplication.',
+      feats: ['No central version authority', 'Per-user metadata cache', 'No team deduplication'],
+      link: 'https://openasset.com/resources/adobe-bridge-vs-openasset/',
+      flag: 'Marked Pass in the original workbook, but Bridge does not provide a team-wide single source of truth — only local browsing of shared folders. Consider changing this to No-Go for consistency with other Musts.'
+    }
+  },
+  { /* 3 — Web-Based / Universal Access */
+    canto: {
+      sum: 'Fully browser-based SaaS — marketing can search, preview, and download from Mac, Windows, or mobile without VPN or a mapped network drive.',
+      feats: ['Browser access', 'Mobile apps', 'Cloud-hosted'],
+      link: 'https://www.canto.com/product/digital-asset-management/'
+    },
+    bynder: {
+      sum: 'Cloud DAM accessible from any modern browser and mobile — assets are served from Bynder\'s infrastructure, not a local file path.',
+      feats: ['Web UI', 'Mobile access', 'CDN delivery'],
+      link: 'https://www.bynder.com/en/products/digital-asset-management/'
+    },
+    brandfolder: {
+      sum: '100% web-based — collaborators and guests reach assets through the browser without installing desktop software or mapping drives.',
+      feats: ['Browser-only access', 'Guest portals', 'No local install'],
+      link: 'https://brandfolder.com/product/'
+    },
+    openasset: {
+      sum: 'SaaS platform reachable from any browser — field and office staff can access project photography without relying on Windows network-drive mapping.',
+      feats: ['Web application', 'Remote access', 'SSO (Azure AD, Okta)'],
+      link: 'https://openasset.com/product/'
+    },
+    sharepoint: {
+      sum: 'SharePoint Online is browser-accessible across devices via M365 — already satisfies universal access for documents, though not DAM workflows for creative assets.',
+      feats: ['Browser & mobile', 'M365 apps', 'Already deployed'],
+      link: 'https://www.microsoft.com/en-us/microsoft-365/sharepoint/collaboration'
+    },
+    adobebridge: {
+      sum: 'Bridge is a desktop application tied to local or networked drives. Adobe community guidance explicitly states it is not a multi-user cloud tool and does not support cloud libraries the way a DAM does.',
+      feats: ['Desktop only', 'No browser UI', 'Network drive dependent'],
+      link: 'https://community.adobe.com/t5/bridge-discussions/bridge-does-not-support-cloud-services-other-than-adobe-s-own/td-p/13384775'
+    }
+  },
+  { /* 4 — Right-Sized Scope (basic DAM entry) */
+    canto: {
+      sum: 'Purpose-built DAM that can start with photo/video libraries and scale — modular plans without requiring enterprise modules on day one.',
+      feats: ['DAM-first product', 'Scalable tiers', 'Photo & video foundation'],
+      link: 'https://www.canto.com/pricing/'
+    },
+    bynder: {
+      sum: 'Enterprise DAM with modular packages — can begin with core library, search, and sharing before adding automation or AI agents.',
+      feats: ['Modular packages', 'Core DAM entry', 'Grows with use cases'],
+      link: 'https://www.bynder.com/en/pricing/'
+    },
+    brandfolder: {
+      sum: 'Marketing-focused DAM sized for brand asset libraries — intuitive entry point for photo/video without AEC project-management overhead.',
+      feats: ['Marketing DAM focus', 'Tiered plans', 'Low admin burden'],
+      link: 'https://brandfolder.com/pricing/'
+    },
+    openasset: {
+      sum: 'Built for AEC firms with project-centric data models, Deltek integrations, and proposal tooling — powerful for construction marketing but heavier than a basic photo/video DAM entry point.',
+      feats: ['AEC project model', 'Deltek / Unanet integrations', 'Proposal & RFP tooling'],
+      link: 'https://openasset.com/product/',
+      flag: 'Conditional: strong AEC fit, but the project-first model may exceed a "basic photo/video DAM" starting scope.'
+    },
+    sharepoint: {
+      sum: 'SharePoint is a collaboration and document platform, not a DAM. It lacks native creative-asset workflows (portals, visual search, brand templates) that define our entry scope.',
+      feats: ['Document collaboration', 'Not a DAM', 'No creative-asset workflows'],
+      link: 'https://learn.microsoft.com/en-us/sharepoint/introduction'
+    },
+    adobebridge: {
+      sum: 'Bridge is a Creative Cloud file browser for individual designers — not a deployable DAM system with admin, onboarding, or team library management.',
+      feats: ['Individual tool', 'Not a system of record', 'No DAM admin layer'],
+      link: 'https://helpx.adobe.com/bridge/using/whats-new.html'
+    }
+  },
+  { /* 5 — Security & Data Protection */
+    canto: {
+      sum: 'Enterprise security: encryption in transit/at rest, SSO, granular permissions, activity logs, and documented AI data-handling (customer data not used to train public models).',
+      feats: ['Encryption & SSO', 'Audit trails', 'Documented AI policy'],
+      link: 'https://www.canto.com/trust/'
+    },
+    bynder: {
+      sum: 'SOC 2-aligned controls, RBAC, SSO/SAML, and published security documentation. AI features operate on customer data within Bynder\'s governed environment.',
+      feats: ['SOC 2', 'RBAC & SSO', 'Security documentation'],
+      link: 'https://www.bynder.com/en/security/'
+    },
+    brandfolder: {
+      sum: 'Smartsheet/Brandfolder enterprise security stack — encryption, SSO, role permissions, and Smartsheet trust center policies on data handling and AI.',
+      feats: ['Enterprise encryption', 'SSO', 'Smartsheet trust policies'],
+      link: 'https://www.smartsheet.com/trust'
+    },
+    openasset: {
+      sum: 'Cloud-hosted with SSO (Azure AD, Okta, Ping), role-based access, and vendor security documentation for AEC client data.',
+      feats: ['SSO providers', 'Role-based access', 'Vendor security docs'],
+      link: 'https://openasset.com/resources/security/'
+    },
+    sharepoint: {
+      sum: 'Microsoft 365 enterprise security — encryption, DLP, audit logging, and compliance certifications. Meets baseline corporate security expectations for a hosted platform.',
+      feats: ['M365 compliance', 'Encryption & DLP', 'Audit logging'],
+      link: 'https://learn.microsoft.com/en-us/compliance/anz/microsoft-365-compliance-offerings'
+    },
+    adobebridge: {
+      sum: 'Bridge has no asset-level security layer — if a user can reach a file path, they can copy or alter it. No audit trail, no per-asset restrictions, and no enterprise DAM security controls.',
+      feats: ['No per-asset security', 'No audit trail', 'OS folder permissions only'],
+      link: 'https://daminion.net/articles/tips/adobe-bridge-vs-digital-asset-management/'
+    }
+  },
+  { /* 6 — Attainable Adoption */
+    canto: {
+      sum: 'Structured onboarding paths, extensive help center, getting-started guides, and in-app resources — teams can ramp without a single internal expert carrying rollout.',
+      feats: ['Help center & guides', 'Getting-started paths', 'Training resources'],
+      link: 'https://support.canto.com/hc/en-us/articles/23002995082257-Getting-started-with-Canto'
+    },
+    bynder: {
+      sum: 'Dedicated support portal with end-user getting-started articles, admin guides, and implementation documentation — designed for org-wide rollout.',
+      feats: ['End-user onboarding', 'Admin documentation', 'Support portal'],
+      link: 'https://support.bynder.com/hc/en-us/articles/360013871940-Getting-Started-With-Bynder-As-An-End-User'
+    },
+    brandfolder: {
+      sum: 'Collaborator learning track and help articles aimed at non-admin users — aligns with Brandfolder\'s reputation as the most approachable UI in this evaluation.',
+      feats: ['Collaborator guide', 'In-app help', 'Low training burden'],
+      link: 'https://help.smartsheet.com/learning-track/brandfolder-collaborator-user-guide'
+    },
+    openasset: {
+      sum: 'Success center, implementation guides, and AEC-specific onboarding — though implementation complexity is a noted risk (see Risks section).',
+      feats: ['Success center', 'AEC onboarding', 'Implementation guides'],
+      link: 'https://success.openasset.com/en/'
+    },
+    sharepoint: {
+      sum: 'Microsoft offers Learning Pathways and Learn for general SharePoint use, but nothing for adopting SharePoint as a creative-asset DAM. Governed libraries, brand sharing, and marketing metadata standards would require Cummings-built SOPs and custom training \u2014 not a vendor-supported rollout path.',
+      feats: ['General M365 training only', 'No DAM onboarding', 'Internal SOPs required']
+    },
+    adobebridge: {
+      sum: 'Adobe offers help articles and in-app tutorials for individual users, plus CC Teams deployment and the Custom Metadata Panel for designer metadata standards. That supports solo creatives, not org-wide DAM rollout \u2014 no admin console, non-designer onboarding, or team governance playbook.',
+      feats: ['Individual tutorials', 'Custom Metadata Panel', 'No team rollout']
+    }
   }
 ];
 
@@ -851,7 +1100,7 @@ function renderMustsTable() {
     OPTIONS.map(o => '<th style="background:' + COLORS[o] + '">' + esc(LABELS[o]) + '</th>').join('') + '</tr></thead>';
   let body = '<tbody>' + MUSTS.map((m, i) => {
     let row = '<td onclick="showMust(' + i + ')">' + esc(m.short) +
-      '<span class="open-hint">' + esc(m.tab || m.title) + ' \u2014 click to open &rsaquo;</span></td>';
+      '<span class="open-hint">' + esc(m.tab || m.title) + ' \u2014 click for full breakdown &rsaquo;</span></td>';
     row += OPTIONS.map(o => {
       const g = m.go[o];
       if (g === 1) return '<td><span class="gng go">&#10003;</span></td>';
@@ -869,14 +1118,17 @@ function renderMustsTable() {
 
 /* ====== RENDER: must tabs ====== */
 const BLOCK_ICON = { flow: '\u2192', pain: '\u26A0', sol: '\u2713', req: '\u25C6' };
-function mustBodyHtml(m) {
-  /* per-platform pass/fail strip ties the breakdown back to the go/no-go table */
+function mustVerdictClass(g) { return g === 1 ? 'pass' : (g === '~' ? 'cond' : 'fail'); }
+function mustVerdictLabel(g) { return g === 1 ? 'Passes' : (g === '~' ? 'Conditional' : 'Does not pass'); }
+function mustGoRank(g) { return g === 1 ? 0 : (g === '~' ? 1 : 2); }
+function mustBodyHtml(m, mi) {
+  const pdata = (typeof MUST_PLATFORM !== 'undefined' && MUST_PLATFORM[mi]) ? MUST_PLATFORM[mi] : {};
   let inner = '<div class="must-status">' + OPTIONS.map(o => {
     const g = m.go[o];
-    const cls = g === 1 ? 'pass' : (g === '~' ? 'cond' : 'fail');
+    const cls = mustVerdictClass(g);
     const mark = g === 1 ? '\u2713' : (g === '~' ? '~' : '\u2715');
     return '<span class="ms-chip ' + cls + '"><b>' + mark + '</b>' + esc(LABELS[o]) + '</span>';
-  }).join('') + '</div>';
+  }).join('') + '</div><div class="must-context">';
 
   m.blocks.forEach(b => {
     const icon = '<span class="blabel-icon">' + (BLOCK_ICON[b.kind] || '') + '</span>';
@@ -893,6 +1145,21 @@ function mustBodyHtml(m) {
         b.list.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul></div>';
     }
   });
+  inner += '</div><div class="must-section-hd">Platform verdicts &mdash; why each option passes or fails</div><div class="must-platform-grid">';
+  const order = OPTIONS.slice().sort((a, b) => mustGoRank(m.go[a]) - mustGoRank(m.go[b]));
+  inner += order.map(o => {
+    const g = m.go[o];
+    const d = pdata[o] || {};
+    const vcls = mustVerdictClass(g);
+    const flag = d.flag ? '<div class="must-flag">' + esc(d.flag) + '</div>' : '';
+    const feats = (d.feats || []).map(f => '<span class="deep-chip">' + esc(f) + '</span>').join('');
+    return '<div class="deep-card" style="--c:' + COLORS[o] + '">' +
+      '<div class="deep-card-head"><span class="deep-name">' + esc(LABELS[o]) + '</span>' +
+      '<span class="must-verdict ' + vcls + '">' + mustVerdictLabel(g) + '</span></div>' + flag +
+      '<p class="deep-sum">' + esc(d.sum || 'No platform-specific notes recorded for this Must.') + '</p>' +
+      (feats ? '<div class="deep-chips">' + feats + '</div>' : '') + '</div>';
+  }).join('');
+  inner += '</div>';
   return inner;
 }
 let mustReturnFocus = null;
@@ -900,15 +1167,19 @@ function showMust(i) {
   const m = MUSTS[i]; if (!m) return;
   document.getElementById('must-eyebrow').textContent = 'Mandatory Must \u00b7 ' + (i + 1) + ' of ' + MUSTS.length;
   document.getElementById('must-title').textContent = m.title;
-  document.getElementById('must-sub').textContent = m.desc;
-  document.getElementById('must-body').innerHTML = mustBodyHtml(m);
+  document.getElementById('must-sub').innerHTML =
+    '<span class="deep-def">' + esc(m.desc) + '</span>' +
+    '<span class="deep-meta">Pass-first breakdown &mdash; sourced from vendor docs, Microsoft Learn, and project research.</span>';
+  document.getElementById('must-body').innerHTML = mustBodyHtml(m, i);
 
   const prevDis = i === 0 ? ' disabled' : '';
   const nextDis = i === MUSTS.length - 1 ? ' disabled' : '';
   document.getElementById('must-foot').innerHTML =
+    '<div class="must-foot-nav">' +
     '<button class="must-nav"' + prevDis + ' onclick="showMust(' + (i - 1) + ')">&lsaquo; Prev</button>' +
     '<span class="must-foot-mid">' + esc(m.tab || m.title) + '</span>' +
-    '<button class="must-nav"' + nextDis + ' onclick="showMust(' + (i + 1) + ')">Next &rsaquo;</button>';
+    '<button class="must-nav"' + nextDis + ' onclick="showMust(' + (i + 1) + ')">Next &rsaquo;</button></div>' +
+    '<div class="must-foot-note">Orange <strong>Review flag</strong> boxes note verdicts that may need a second look against the original workbook.</div>';
 
   const el = document.getElementById('must-modal');
   if (!el.classList.contains('open')) {

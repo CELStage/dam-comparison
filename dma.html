@@ -279,6 +279,10 @@
     .risk-badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 8px; white-space: nowrap; }
     .risk-badge.hi { background: #fee2e2; color: #b91c1c; } .risk-badge.mid { background: #fef3c7; color: #92400e; } .risk-badge.lo { background: #d1fae5; color: #065f46; }
     .risk-none { color: #a0aec0; font-size: 12.5px; font-style: italic; }
+    .risk-total { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; padding-top: 10px; border-top: 2px solid #e2e8f0; }
+    .risk-total .rt-label { font-family: 'Roboto Condensed', 'Roboto', sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; }
+    .risk-total .rt-val { font-family: 'Roboto Condensed', 'Roboto', sans-serif; font-size: 18px; font-weight: 800; padding: 2px 10px; border-radius: 8px; }
+    .risk-total .rt-val.hi { background: #fee2e2; color: #b91c1c; } .risk-total .rt-val.mid { background: #fef3c7; color: #92400e; } .risk-total .rt-val.lo { background: #d1fae5; color: #065f46; }
 
     /* RECOMMENDATION */
     .recommend { background: linear-gradient(135deg, #1b4332, #2d6a4f); color: #fff; border-radius: 14px; padding: 24px 28px; display: flex; gap: 18px; align-items: flex-start; }
@@ -802,8 +806,8 @@ const WANT_DEFS = [
 /* ====== RISKS ====== */
 const RISKS = {
   canto: [{ risk: 'Pricing \u2014 Power Users', prob: 5, sev: 5 }, { risk: 'Adobe needs a Power User seat', prob: 5, sev: 3 }],
-  bynder: [{ risk: 'Cost at scale (add-ons)', prob: 3, sev: 3 }, { risk: '3-year contract commitment', prob: 5, sev: 1 }],
-  brandfolder: [{ risk: '3rd-party integrations', prob: 5, sev: 1 }, { risk: 'AI tagging "overachiever"', prob: 5, sev: 3 }],
+  bynder: [{ risk: 'Cost at scale (add-ons)', prob: 4, sev: 4 }, { risk: '3-year contract commitment', prob: 5, sev: 1 }],
+  brandfolder: [{ risk: '3rd-party integrations', prob: 5, sev: 1 }, { risk: 'AI tagging "overachiever"', prob: 5, sev: 1 }],
   openasset: [{ risk: 'Dependent on projects (e.g., logos, etc.)', prob: 5, sev: 5 }, { risk: 'Difficult implementation', prob: 3, sev: 5 }],
   sharepoint: [],
   adobebridge: []
@@ -1036,6 +1040,11 @@ function closeDeepDive() {
 }
 
 /* ====== RENDER: risks ====== */
+function riskTotalClass(t) {
+  if (t >= 20) return 'hi';
+  if (t >= 10) return 'mid';
+  return 'lo';
+}
 function renderRisks() {
   const grid = document.getElementById('risk-grid');
   grid.innerHTML = OPTIONS.map(o => {
@@ -1044,12 +1053,16 @@ function renderRisks() {
     if (!list.length) {
       inner += '<div class="risk-none">' + (isEliminated(o) ? 'Eliminated by Musts \u2014 not risk-scored.' : 'No major risks recorded.') + '</div>';
     } else {
+      let total = 0;
       inner += list.map(r => {
         const s = r.prob * r.sev;
+        total += s;
         const cls = s >= 15 ? 'hi' : (s >= 9 ? 'mid' : 'lo');
         return '<div class="risk-row"><span class="rname">' + esc(r.risk) + '</span>' +
           '<span class="risk-badge ' + cls + '">P' + r.prob + ' \u00d7 S' + r.sev + ' = ' + s + '</span></div>';
       }).join('');
+      inner += '<div class="risk-total"><span class="rt-label">Combined risk score</span>' +
+        '<span class="rt-val ' + riskTotalClass(total) + '">' + total + '</span></div>';
     }
     return inner + '</div>';
   }).join('');
@@ -1098,7 +1111,13 @@ function exportCsv() {
   lines.push([]);
   /* risks */
   lines.push(['RISKS', 'Probability', 'Severity', 'Risk Score'].map(csvEscape).join(','));
-  OPTIONS.forEach(o => (RISKS[o] || []).forEach(r => lines.push([LABELS[o] + ': ' + r.risk, r.prob, r.sev, r.prob * r.sev].map(csvEscape).join(','))));
+  OPTIONS.forEach(o => {
+    const list = RISKS[o] || [];
+    if (!list.length) return;
+    list.forEach(r => lines.push([LABELS[o] + ': ' + r.risk, r.prob, r.sev, r.prob * r.sev].map(csvEscape).join(',')));
+    const total = list.reduce((sum, r) => sum + r.prob * r.sev, 0);
+    lines.push([LABELS[o] + ': COMBINED RISK SCORE', '', '', total].map(csvEscape).join(','));
+  });
 
   const blob = new Blob([lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
   const url = URL.createObjectURL(blob);
